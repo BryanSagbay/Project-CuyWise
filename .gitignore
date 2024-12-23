@@ -3,6 +3,9 @@ node_modules
 .env
 
 #Angular
+.vscode
+public
+.angular
 # Compiled output
 /dist
 /tmp
