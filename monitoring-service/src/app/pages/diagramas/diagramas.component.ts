@@ -1,15 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { DbConexionService } from '../../service/db-conexion.service';
 import { Datos } from '../../models/Datos';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-diagramas',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule],
   templateUrl: './diagramas.component.html',
   styleUrl: './diagramas.component.css'
 })
