@@ -1,14 +1,19 @@
 import { Routes } from '@angular/router';
-import { NavbarComponent } from './navbar/navbar.component';
+import { HomeComponent } from './pages/home/home.component';
+import { DiagramasComponent } from './pages/diagramas/diagramas.component';
 
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'nav',
+        redirectTo: 'home',
         pathMatch: 'full',
     },
     {
-        path: 'nav',
-        component: NavbarComponent,
+        path: 'home',
+        component: HomeComponent,
+    },
+    {
+        path: 'diagramas',
+        component: DiagramasComponent,
     },
 ];
