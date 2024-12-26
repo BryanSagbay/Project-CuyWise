@@ -1,1 +1,7 @@
-<p>diagramas works!</p>
+<!-- pcws-list.component.html -->
+<ul>
+    <li *ngFor="let dato of datos">
+    <h3>{{ dato.fecha_evento }}</h3>
+    <p>{{ dato.descripcion }}</p>
+    </li>
+</ul>  
