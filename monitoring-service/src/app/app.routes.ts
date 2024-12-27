@@ -2,8 +2,10 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { DiagramasComponent } from './pages/diagramas/diagramas.component';
 import { ImagenesComponent } from './pages/imagenes/imagenes.component';
-import { ViewDBComponent } from './pages/view-db/view-db.component';
 import { MonitoreoComponent } from './pages/monitoreo/monitoreo.component';
+import { LogsComponent } from './pages/logs/logs.component';
+import { MedicionesComponent } from './pages/mediciones/mediciones.component';
+import { AnimalesComponent } from './pages/animales/animales.component';
 
 export const routes: Routes = [
     {
@@ -33,19 +35,35 @@ export const routes: Routes = [
     },
     {
         path: '',
-        redirectTo: 'database',
-        pathMatch: 'full' },
-    {
-        path: 'database',
-        component: ViewDBComponent,
-    },
-    {
-        path: '',
         redirectTo: 'monitoreo',
         pathMatch: 'full' },
     {
         path: 'monitoreo',
         component: MonitoreoComponent,
+    },
+    {
+        path: '',
+        redirectTo: 'animales',
+        pathMatch: 'full' },
+    {
+        path: 'animales',
+        component: AnimalesComponent,
+    },
+    {
+        path: '',
+        redirectTo: 'mediciones',
+        pathMatch: 'full' },
+    {
+        path: 'mediciones',
+        component: MedicionesComponent,
+    },
+    {
+        path: '',
+        redirectTo: 'logs',
+        pathMatch: 'full' },
+    {
+        path: 'logs',
+        component: LogsComponent,
     },
     ],
 },
