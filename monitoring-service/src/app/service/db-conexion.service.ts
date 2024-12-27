@@ -15,20 +15,20 @@ export class DbConexionService {
 
   constructor(private http: HttpClient) { }
 
-  // Método Get para obtener todos los datos de la base de datos
-  getDataAnimal(): Observable<Animales[]> {
+// Método para obtener animales
+  getAnimales(): Observable<Animales[]> {
     return this.http.get<Animales[]>(`${this.url}/animales`).pipe(
       catchError(this.handleError)
-    );
+  );
   }
 
-  getDataMedicion(): Observable<Mediciones[]> {
+  getMedicion(): Observable<Mediciones[]> {
     return this.http.get<Mediciones[]>(`${this.url}/mediciones`).pipe(
       catchError(this.handleError)
     );
   }
 
-  getDataEvent(): Observable<Eventos[]> {
+  getEvent(): Observable<Eventos[]> {
     return this.http.get<Eventos[]>(`${this.url}/eventos`).pipe(
       catchError(this.handleError)
     );
