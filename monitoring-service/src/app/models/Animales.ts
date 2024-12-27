@@ -1,9 +1,8 @@
-export class Animales{
-    id: number = 0;
-    animal_id: number = 0;
-    nombre_animal: string = '';
-    raza_animal: string = '';
-    criadero_animal: string = '';
-    fecha_registro_animal: string = '';
-    activo_animal: boolean = false;
+export interface Animales{
+    id: number;
+    nombre: string;
+    raza: string;
+    criadero: string;
+    fecha_registro: string;
+    activo: boolean;
 }
