@@ -28,19 +28,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of datos">
+                                <tr *ngFor="let medicion of mediciones">
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0 px-3">{{item.animal_id}}</p>
+                                        <p class="text-xs font-weight-bold mb-0 px-3">{{medicion.id}}</p>
                                     </td>
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0">{{item.medicion_id}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{medicion.animal_id}}</p>
                                     </td>
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0">{{item.peso_medicion}} <span>(g)</span>
+                                        <p class="text-xs font-weight-bold mb-0">{{medicion.peso}} <span>(g)</span>
                                         </p>
                                     </td>
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0">{{item.fecha_medicion}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{medicion.fecha_medicion}}</p>
                                     </td>
                                 </tr>
                             </tbody>

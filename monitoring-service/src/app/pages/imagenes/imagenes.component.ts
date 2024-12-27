@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Datos } from '../../models/Datos';
 import { DbConexionService } from '../../service/db-conexion.service';
+import { Mediciones } from '../../models/Mediciones';
 
 @Component({
   selector: 'app-imagenes',
@@ -11,22 +11,18 @@ import { DbConexionService } from '../../service/db-conexion.service';
 })
 export class ImagenesComponent {
 
-  dato: Datos = new Datos();
-  bandera: boolean=false;
-  datos: Datos[] = [];
+  mediciones: Mediciones[] = [];
 
   constructor(private DbConexionService:DbConexionService){
 
 }
-ngOnInit() {
-  if (this.bandera) return;
-  this.DbConexionService.getAllData().subscribe((data: Datos[]) => {
-    this.datos = data.map(item => ({
-      ...item,
-      imageUrl: `data:image/jpeg;base64,${item.imagen_medicion}`
-    }));
+ngOnInit(){
+  this.DbConexionService.getMedicion().subscribe( (data:Mediciones[]) => {
+    this.mediciones = data
+  },
+  (error) => {
+    console.error('Error al obtener las mediciones:', error);
   });
-  this.dato = new Datos();
 }
 }
 
