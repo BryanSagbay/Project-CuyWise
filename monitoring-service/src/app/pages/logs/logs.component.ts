@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Datos } from '../../models/Datos';
 import { DbConexionService } from '../../service/db-conexion.service';
+import { Eventos } from '../../models/Eventos';
 
 @Component({
   selector: 'app-logs',
@@ -11,19 +11,17 @@ import { DbConexionService } from '../../service/db-conexion.service';
 })
 export class LogsComponent {
 
-
-  dato: Datos = new Datos();
-  bandera: boolean=false;
-  datos: Datos[] = [];
+  eventos: Eventos[] = [];
   
   constructor(private DbConexionService:DbConexionService){
 
 }
 ngOnInit(){
-  if(this.bandera)return;
-  this.DbConexionService.getAllData().subscribe( (data:Datos[]) => {
-    this.datos = data
-  })
-  this.dato=new Datos();
+  this.DbConexionService.getEvent().subscribe( (data:Eventos[]) => {
+    this.eventos = data
+  },
+  (error) => {
+    console.error('Error al obtener los logs:', error);
+  });
 }
 }

@@ -13,7 +13,8 @@
                         <table class="table align-items-center mb-0">
                             <thead>
                                 <tr>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                    <th
+                                        class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                         Animal ID</th>
                                     <th
                                         class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -30,22 +31,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of datos">
+                                <tr *ngFor="let evento of eventos">
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0 px-3">{{item.animal_id}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{evento.id}}</p>
                                     </td>
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0">{{item.evento_id}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{evento.animal_id}}</p>
                                     </td>
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0">{{item.tipo_evento}}
+                                        <p class="text-xs font-weight-bold mb-0">{{evento.tipo_evento}}
                                         </p>
                                     </td>
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0">{{item.descripcion_evento}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{evento.descripcion}}</p>
                                     </td>
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0">{{item.fecha_evento}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{evento.fecha_evento}}</p>
                                     </td>
                                 </tr>
                             </tbody>
