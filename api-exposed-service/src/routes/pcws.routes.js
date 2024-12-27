@@ -1,5 +1,21 @@
 import { Router } from "express";
-import { getAnimales, getMediciones, getEventos, getAnimalById, getMedicionById, getEventoById  } from "../controllers/pcws.controller.js";
+import { 
+    getAnimales, 
+    getMediciones, 
+    getEventos,
+    getAnimalById, 
+    getMedicionById, 
+    getEventoById,   
+    getDistribucionRazas,
+    getAnimalesActivosInactivos,
+    getEvolucionPesoPorAnimal,
+    getEventosPorTipo,
+    getMedicionesPorAnimal,
+    getAnimalesPorMesAnio,
+    getRelacionPesoFecha,
+    getPromedioPesoPorRaza 
+} 
+    from "../controllers/pcws.controller.js";
 
 const router = Router();
 
@@ -239,5 +255,94 @@ router.get("/mediciones/:id", getMedicionById);
  *         description: Evento no encontrado
  */
 router.get("/eventos/:id", getEventoById);
+
+//Consulta para los graficos
+/**
+ * @swagger
+ * /graficos/distribucion-razas:
+ *   get:
+ *     summary: Obtener la distribución de animales por razas
+ *     responses:
+ *       200:
+ *         description: Datos de la distribución de razas
+ */
+router.get("/graficos/distribucion-razas", getDistribucionRazas);
+
+/**
+ * @swagger
+ * /graficos/activos-inactivos:
+ *   get:
+ *     summary: Obtener la cantidad de animales activos e inactivos
+ *     responses:
+ *       200:
+ *         description: Datos de animales activos e inactivos
+ */
+router.get("/graficos/activos-inactivos", getAnimalesActivosInactivos);
+
+/**
+ * @swagger
+ * /graficos/evolucion-peso:
+ *   get:
+ *     summary: Obtener la evolución del peso de los animales por fecha
+ *     responses:
+ *       200:
+ *         description: Datos de la evolución del peso por animal
+ */
+router.get("/graficos/evolucion-peso", getEvolucionPesoPorAnimal);
+
+/**
+ * @swagger
+ * /graficos/eventos-tipo:
+ *   get:
+ *     summary: Obtener la cantidad de eventos por tipo
+ *     responses:
+ *       200:
+ *         description: Datos de eventos por tipo
+ */
+router.get("/graficos/eventos-tipo", getEventosPorTipo);
+
+/**
+ * @swagger
+ * /graficos/mediciones-por-animal:
+ *   get:
+ *     summary: Obtener el número de mediciones realizadas a cada animal
+ *     responses:
+ *       200:
+ *         description: Datos de mediciones por animal
+ */
+router.get("/graficos/mediciones-por-animal", getMedicionesPorAnimal);
+
+/**
+ * @swagger
+ * /graficos/animales-por-mes:
+ *   get:
+ *     summary: Obtener la cantidad de animales registrados por mes/año
+ *     responses:
+ *       200:
+ *         description: Datos de animales registrados por mes/año
+ */
+router.get("/graficos/animales-por-mes", getAnimalesPorMesAnio);
+
+/**
+ * @swagger
+ * /graficos/relacion-peso-fecha:
+ *   get:
+ *     summary: Obtener la relación entre peso y fecha de medición
+ *     responses:
+ *       200:
+ *         description: Datos de peso vs fecha de medición
+ */
+router.get("/graficos/relacion-peso-fecha", getRelacionPesoFecha);
+
+/**
+ * @swagger
+ * /graficos/promedio-peso-raza:
+ *   get:
+ *     summary: Obtener el promedio de peso por raza
+ *     responses:
+ *       200:
+ *         description: Promedio de peso por raza
+ */
+router.get("/graficos/promedio-peso-raza", getPromedioPesoPorRaza);
 
 export default router;
