@@ -19,7 +19,6 @@ export class AnimalesComponent {
 ngOnInit(){
   this.DbConexionService.getAnimales().subscribe( (data:Animales[]) => {
     this.animales = data
-    console.log(data);
   },
   (error) => {
     console.error('Error al obtener animales:', error);
