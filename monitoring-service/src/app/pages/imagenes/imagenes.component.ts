@@ -13,16 +13,17 @@ export class ImagenesComponent {
 
   mediciones: Mediciones[] = [];
 
-  constructor(private DbConexionService:DbConexionService){
+  constructor(private dbConexionService: DbConexionService) {}
 
+  ngOnInit() {
+    this.dbConexionService.getMedicion().subscribe(
+      (data: Mediciones[]) => {
+        this.mediciones = data; // Almacena directamente los datos
+        console.log(this.mediciones);
+      },
+      (error) => {
+        console.error('Error al obtener las mediciones:', error);
+      }
+    );
+  }
 }
-ngOnInit(){
-  this.DbConexionService.getMedicion().subscribe( (data:Mediciones[]) => {
-    this.mediciones = data
-  },
-  (error) => {
-    console.error('Error al obtener las mediciones:', error);
-  });
-}
-}
-
