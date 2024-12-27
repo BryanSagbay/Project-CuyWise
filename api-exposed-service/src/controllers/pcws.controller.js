@@ -1,73 +1,67 @@
 import { pool } from "../db.js";
 
-export const getPCWS = async (req, res) => {
+// Funciones para obtener los datos de las tablas de la base de datos
+export const getAnimales = async (req, res) => {
     try {
-        const result = await pool.query(`
-            SELECT 
-                a.id AS animal_id,
-                a.nombre AS nombre_animal,
-                a.raza AS raza_animal,
-                a.criadero AS criadero_animal,
-                a.fecha_registro AS fecha_registro_animal,
-                a.activo AS activo_animal,
-                m.id AS medicion_id,
-                m.peso AS peso_medicion,
-                m.imagen_base64 AS imagen_medicion,
-                m.fecha_medicion AS fecha_medicion,
-                e.id AS evento_id,
-                e.tipo_evento AS tipo_evento,
-                e.descripcion AS descripcion_evento,
-                e.fecha_evento AS fecha_evento
-            FROM 
-                "Animales" a
-            LEFT JOIN 
-                "Mediciones" m ON a.id = m.animal_id
-            LEFT JOIN 
-                "Eventos" e ON a.id = e.animal_id;
-        `);
+        const result = await pool.query('SELECT * FROM "Animales";');
         res.json(result.rows);
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ error: 'Error al obtener los datos' });
+        res.status(500).json({ error: 'Error al obtener los datos de Animales' });
+    }
+};
+
+export const getMediciones = async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM "Mediciones";');
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ error: 'Error al obtener los datos de Mediciones' });
+    }
+};
+
+export const getEventos = async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM "Eventos";');
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ error: 'Error al obtener los datos de Eventos' });
+    }
+};
+
+
+//Funciones para buscar por ID
+export const getAnimalById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query('SELECT * FROM "Animales" WHERE id = $1;', [id]);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ error: 'Error al obtener los datos de Animales' });
     }
 }
 
-export const getPCWSforId = async (req, res) => {
-    const { id } = req.params;
+export const getMedicionById = async (req, res) => {
     try {
-        const result = await pool.query(`
-            SELECT 
-                a.id AS animal_id,
-                a.nombre AS nombre_animal,
-                a.raza AS raza_animal,
-                a.criadero AS criadero_animal,
-                a.fecha_registro AS fecha_registro_animal,
-                a.activo AS activo_animal,
-                m.id AS medicion_id,
-                m.peso AS peso_medicion,
-                m.imagen_base64 AS imagen_medicion,
-                m.fecha_medicion AS fecha_medicion,
-                e.id AS evento_id,
-                e.tipo_evento AS tipo_evento,
-                e.descripcion AS descripcion_evento,
-                e.fecha_evento AS fecha_evento
-            FROM 
-                "Animales" a
-            LEFT JOIN 
-                "Mediciones" m ON a.id = m.animal_id
-            LEFT JOIN 
-                "Eventos" e ON a.id = e.animal_id
-            WHERE 
-                a.id = $1;
-        `, [id]);
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: 'Animal no encontrado' });
-        }
-
+        const { id } = req.params;
+        const result = await pool.query('SELECT * FROM "Mediciones" WHERE id = $1;', [id]);
         res.json(result.rows);
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ error: 'Error al obtener los datos' });
+        res.status(500).json({ error: 'Error al obtener los datos de Mediciones' });
+    }
+}
+
+export const getEventoById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query('SELECT * FROM "Eventos" WHERE id = $1;', [id]);
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ error: 'Error al obtener los datos de Eventos' });
     }
 }
