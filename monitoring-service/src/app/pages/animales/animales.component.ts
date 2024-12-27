@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { Datos } from '../../models/Datos';
 import { DbConexionService } from '../../service/db-conexion.service';
 import { CommonModule } from '@angular/common';
+import { Animales } from '../../models/Animales';
 
 @Component({
   selector: 'app-animales',
@@ -11,17 +11,18 @@ import { CommonModule } from '@angular/common';
 })
 export class AnimalesComponent {
 
-  dato: Datos = new Datos();
-  bandera: boolean=false;
-  datos: Datos[] = [];
+  animales: Animales[] = [];
+
   constructor(private DbConexionService:DbConexionService){
 
 }
 ngOnInit(){
-  if(this.bandera)return;
-  this.DbConexionService.getAllData().subscribe( (data:Datos[]) => {
-    this.datos = data
-  })
-  this.dato=new Datos();
+  this.DbConexionService.getAnimales().subscribe( (data:Animales[]) => {
+    this.animales = data
+    console.log(data);
+  },
+  (error) => {
+    console.error('Error al obtener animales:', error);
+  });
 }
 }

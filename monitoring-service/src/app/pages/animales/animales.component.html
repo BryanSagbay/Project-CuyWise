@@ -35,24 +35,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let item of datos">
+                                <tr *ngFor="let animal of animales">
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0 px-3">{{item.animal_id}}</p>
+                                        <p class="text-xs font-weight-bold mb-0 px-3">{{animal.id}}</p>
                                     </td>
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0">{{item.nombre_animal}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{animal.nombre}}</p>
                                     </td>
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0">{{item.raza_animal}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{animal.raza}}</p>
                                     </td>
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0">{{item.criadero_animal}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{animal.criadero}}</p>
                                     </td>
                                     <td>
-                                        <p class="text-xs font-weight-bold mb-0">{{item.fecha_registro_animal}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{animal.fecha_registro}}</p>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="badge badge-sm bg-gradient-success">{{item.activo_animal}}</span>
+                                        <span class="badge badge-sm bg-gradient-success">{{animal.activo}}</span>
                                     </td>
                                 </tr>
                             </tbody>
