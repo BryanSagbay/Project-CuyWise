@@ -53,6 +53,62 @@ export class DbConexionService {
     );  
   }
   
+  // Método para obtener distribución de razas
+  getDistribucionRazas(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/graficos/distribucion-razas`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Método para obtener animales activos vs inactivos
+  getAnimalesActivosInactivos(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/graficos/activos-inactivos`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Método para obtener evolución del peso por animal
+  getEvolucionPesoPorAnimal(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/graficos/evolucion-peso`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Método para obtener eventos por tipo
+  getEventosPorTipo(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/graficos/eventos-tipo`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Método para obtener el número de mediciones por animal
+  getMedicionesPorAnimal(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/graficos/mediciones-por-animal`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Método para obtener registro de animales por mes/año
+  getAnimalesPorMesAnio(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/graficos/animales-por-mes`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Método para obtener relación peso vs fecha de medición
+  getRelacionPesoFecha(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/graficos/relacion-peso-fecha`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Método para obtener el promedio de peso por raza
+  getPromedioPesoPorRaza(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}/graficos/promedio-peso-raza`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   // Método para manejar errores
   private handleError(error: HttpErrorResponse) {
     console.error('Ocurrió un error:', error.message);
