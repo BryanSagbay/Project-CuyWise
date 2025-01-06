@@ -1,0 +1,69 @@
+
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Tres columnas */
+    grid-auto-rows: 250px; /* Altura base de las filas */
+    gap: 16px; /* Espacio entre tarjetas */
+    padding: 16px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 16px;
+}
+
+/* Card 1 ocupa 1x1 */
+.card-1 {
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+/* Card 2 ocupa 1x1 */
+.card-2 {
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+/* Card 3 ocupa 1x2 */
+.card-3 {
+    grid-column: span 1;
+    grid-row: span 2; /* Ocupa dos filas */
+}
+
+/* Card 4 ocupa 1x2 */
+.card-4 {
+    grid-column: span 1;
+    grid-row: span 2; /* Ocupa dos filas */
+}
+
+/* Card 5 ocupa 1x1 */
+.card-5 {
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+/* Card 6 ocupa 2x1 */
+.card-6 {
+    grid-column: span 2; /* Ocupa dos columnas */
+    grid-row: span 1;
+}
+
+/* Card 7 ocupa 1x1 */
+.card-7 {
+    grid-column: span 1;
+    grid-row: span 1;
+}
+
+/* Card 8 ocupa 2x1 */
+.card-8 {
+    grid-column: span 2; /* Ocupa dos columnas */
+    grid-row: span 1;
+}
