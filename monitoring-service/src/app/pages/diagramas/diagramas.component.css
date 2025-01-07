@@ -109,9 +109,39 @@
 }
 
 /* Ajuste específico del contenedor del gráfico */
+#distribucion-razas {
+    max-width: 100%;
+    height: auto;
+}
+#activo-inactivo {
+    max-width: 100%;
+    height: auto;
+}
 #evolucion-peso {
     max-width: 100%;
-    /* Se adapta al contenedor */
     height: auto;
-    /* Ajuste automático para evitar desbordamientos */
+}
+#relacion-peso {
+    max-width: 100%;
+    height: auto;
+}
+
+#mediciones-animal {
+    max-width: 100%;
+    height: auto;
+}
+
+#animales-mes {
+    max-width: 100%;
+    height: auto;
+}
+
+#promedio-peso {
+    max-width: 100%;
+    height: auto;
+}
+
+#eventos-tipo {
+    max-width: 100%;
+    height: auto;
 }
