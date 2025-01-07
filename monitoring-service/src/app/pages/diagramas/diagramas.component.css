@@ -1,10 +1,11 @@
-
-
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Tres columnas */
-    grid-auto-rows: 250px; /* Altura base de las filas */
-    gap: 16px; /* Espacio entre tarjetas */
+    grid-template-columns: repeat(3, 1fr);
+    /* Tres columnas */
+    grid-auto-rows: 250px;
+    /* Altura base de las filas */
+    gap: 16px;
+    /* Espacio entre tarjetas */
     padding: 16px;
 }
 
@@ -35,13 +36,15 @@
 /* Card 3 ocupa 1x2 */
 .card-3 {
     grid-column: span 1;
-    grid-row: span 2; /* Ocupa dos filas */
+    grid-row: span 2;
+    /* Ocupa dos filas */
 }
 
 /* Card 4 ocupa 1x2 */
 .card-4 {
     grid-column: span 1;
-    grid-row: span 2; /* Ocupa dos filas */
+    grid-row: span 2;
+    /* Ocupa dos filas */
 }
 
 /* Card 5 ocupa 1x1 */
@@ -52,7 +55,8 @@
 
 /* Card 6 ocupa 2x1 */
 .card-6 {
-    grid-column: span 2; /* Ocupa dos columnas */
+    grid-column: span 2;
+    /* Ocupa dos columnas */
     grid-row: span 1;
 }
 
@@ -64,6 +68,50 @@
 
 /* Card 8 ocupa 2x1 */
 .card-8 {
-    grid-column: span 2; /* Ocupa dos columnas */
+    grid-column: span 2;
+    /* Ocupa dos columnas */
     grid-row: span 1;
+}
+
+/* Responsividad para pantallas medianas */
+@media (max-width: 992px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        /* Dos columnas */
+    }
+
+    .card-6,
+    .card-8 {
+        grid-column: span 2;
+        /* Seguirán ocupando dos columnas */
+    }
+
+    .card-3,
+    .card-4 {
+        grid-row: span 1;
+        /* Reducir filas para aprovechar mejor el espacio */
+    }
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 576px) {
+    .grid-container {
+        grid-template-columns: repeat(1, 1fr);
+        /* Una columna */
+    }
+
+    .card {
+        grid-column: span 1;
+        /* Todas las tarjetas ocupan una columna */
+        grid-row: span 1;
+        /* Todas ocupan una sola fila */
+    }
+}
+
+/* Ajuste específico del contenedor del gráfico */
+#evolucion-peso {
+    max-width: 100%;
+    /* Se adapta al contenedor */
+    height: auto;
+    /* Ajuste automático para evitar desbordamientos */
 }
