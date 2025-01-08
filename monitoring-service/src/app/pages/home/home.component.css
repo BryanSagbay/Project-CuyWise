@@ -2,3 +2,48 @@
     display: flex;
     width: 100%;
 }
+
+/* Sidebar oculto en pantallas pequeñas */
+.sidenav {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    transition: transform 0.3s ease-in-out;
+    background-color: #fff;
+}
+
+.sidenav.d-none {
+    transform: translateX(-100%);
+}
+
+.sidenav.d-md-block {
+    transform: translateX(0);
+}
+
+/* Clase para el enlace activo */
+.active-link {
+    color: #fff;
+    /* Color del texto */
+    background-color: #b4bebb9a;
+    /* Fondo azul */
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+/* Opcional: Ajuste de íconos cuando están activos */
+.active-link i {
+    opacity: 1;
+    /* Aumentar visibilidad del ícono */
+}
+
+
+/* Ocultar botón en pantallas grandes */
+@media (min-width: 768px) {
+    .btn-light.d-md-none {
+        display: none;
+    }
+}

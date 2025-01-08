@@ -16,55 +16,37 @@ export const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent,
-    children: [
-    {
-        path: '',
-        redirectTo: 'diagramas',
-        pathMatch: 'full' },
-    {
-        path: 'diagramas',
-        component: DiagramasComponent,
-    },
-    {
-        path: '',
-        redirectTo: 'imagenes',
-        pathMatch: 'full' },
-    {
-        path: 'imagenes',
-        component: ImagenesComponent,
-    },
-    {
-        path: '',
-        redirectTo: 'monitoreo',
-        pathMatch: 'full' },
-    {
-        path: 'monitoreo',
-        component: MonitoreoComponent,
-    },
-    {
-        path: '',
-        redirectTo: 'animales',
-        pathMatch: 'full' },
-    {
-        path: 'animales',
-        component: AnimalesComponent,
-    },
-    {
-        path: '',
-        redirectTo: 'mediciones',
-        pathMatch: 'full' },
-    {
-        path: 'mediciones',
-        component: MedicionesComponent,
-    },
-    {
-        path: '',
-        redirectTo: 'logs',
-        pathMatch: 'full' },
-    {
-        path: 'logs',
-        component: LogsComponent,
-    },
+        children: [
+            {
+                path: 'diagramas',
+                component: DiagramasComponent,
+            },
+            {
+                path: 'imagenes',
+                component: ImagenesComponent,
+            },
+            {
+                path: 'monitoreo',
+                component: MonitoreoComponent,
+            },
+            {
+                path: 'animales',
+                component: AnimalesComponent,
+            },
+            {
+                path: 'mediciones',
+                component: MedicionesComponent,
+            },
+            {
+                path: 'logs',
+                component: LogsComponent,
+            },
+            {
+                path: '',
+                redirectTo: 'diagramas',
+                pathMatch: 'full',
+            },
     ],
-},
+    },
 ];
+
