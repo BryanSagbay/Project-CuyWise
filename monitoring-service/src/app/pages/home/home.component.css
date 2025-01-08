@@ -40,6 +40,35 @@
     /* Aumentar visibilidad del ícono */
 }
 
+.breadcrumb {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.breadcrumb-item.active {
+    color: #007bff;
+    /* Color para el breadcrumb activo */
+}
+
+/* Estilo del enlace */
+.search-link {
+    text-decoration: none;
+    /* Elimina la línea de abajo */
+    color: white;
+    /* Cambia el color a blanco (o el color que prefieras) */
+    font-size: 1rem;
+}
+
+/* Agregar un hover para que el enlace cambie de color si es necesario */
+.search-link:hover {
+    color: #f8d7da;
+    /* Color al pasar el mouse (puedes cambiarlo) */
+}
+
+.position-5 {
+    position: absolute; /* Asegúrate de que el elemento esté posicionado absolutamente */
+    left: 5%; /* Posición a la izquierda del contenedor al 5% */
+}
 
 /* Ocultar botón en pantallas grandes */
 @media (min-width: 768px) {
