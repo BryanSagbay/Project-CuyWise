@@ -42,7 +42,7 @@ export class DiagramasComponent implements OnInit {
       },
       title: {
         text: 'Disrubución de Razas',
-        align: 'left'
+        align: 'center'
       },
       labels: razasDR,
       yaxis: {
@@ -73,8 +73,8 @@ export class DiagramasComponent implements OnInit {
         series: cantidadesInac,
         labels: actInac,
         title: {
-          text: 'Activos y Inactivos',
-          align: 'left'
+          text: 'Activos e Inactivos',
+          align: 'center'
         }
       };
     
@@ -83,8 +83,7 @@ export class DiagramasComponent implements OnInit {
     });
     
     //grafica 3
-
-this.DbConexionService.getEvolucionPesoPorAnimal().subscribe(data => {
+    this.DbConexionService.getEvolucionPesoPorAnimal().subscribe(data => {
 
   // Extraemos las fechas (solo la parte de la fecha, sin la hora)
   const fechasPA = data.map(item => item.fecha_medicion.split('T')[0]); 
@@ -151,7 +150,7 @@ this.DbConexionService.getEvolucionPesoPorAnimal().subscribe(data => {
 
   const chart = new ApexCharts(document.querySelector('#evolucion-peso'), options);
   chart.render();
-});
+    });
 
     
     //grafica 4
@@ -282,7 +281,7 @@ this.DbConexionService.getEvolucionPesoPorAnimal().subscribe(data => {
         },
         title: {
           text: 'Animales por Mes',
-          align: 'start'
+          align: 'center'
         }
       };
     
