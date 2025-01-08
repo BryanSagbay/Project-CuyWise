@@ -24,4 +24,13 @@ ngOnInit(){
     console.error('Error al obtener animales:', error);
   });
 }
+
+getBadgeClass(isActive: boolean): string {
+  return isActive ? 'badge badge-sm bg-success text-white' : 'badge badge-sm bg-danger text-white';
+}
+
+getStatusText(isActive: boolean): string {
+  return isActive ? 'Activo' : 'Inactivo';
+}
+
 }

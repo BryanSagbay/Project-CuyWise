@@ -52,8 +52,10 @@
                                         <p class="text-xs font-weight-bold mb-0">{{animal.fecha_registro}}</p>
                                     </td>
                                     <td class="align-middle text-center text-sm">
-                                        <span class="badge badge-sm bg-gradient-success">{{animal.activo}}</span>
-                                    </td>
+                                        <span [ngClass]="getBadgeClass(animal.activo)">
+                                            {{ getStatusText(animal.activo) }}
+                                        </span>
+                                    </td>                                    
                                 </tr>
                             </tbody>
                         </table>

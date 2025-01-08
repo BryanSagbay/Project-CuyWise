@@ -20,42 +20,43 @@ export class DiagramasComponent implements OnInit {
       const razasDR = data.map(item => item.raza);
       const cantidadesDR = data.map(item => parseInt(item.cantidad, 10));
     
-      const options = {
+      const options: ApexOptions = {
         chart: {
-          id: 'distribucion-razas',
-          type: 'area',
-          height: 200,
-          width:400,
-          zoom: {
-          enabled: false
-        }
-      },
-      series: [{
-        name: "cantidad",
-        data: cantidadesDR
-      }],
-      dataLabels: {
-        enabled: false
-      },
-      stroke: {
-        curve: 'straight'
-      },
-      title: {
-        text: 'Disrubución de Razas',
-        align: 'center'
-      },
-      labels: razasDR,
-      yaxis: {
-        opposite: true
-      },
-      legend: {
-        horizontalAlign: 'left'
-      },
-      
-      };
+            id: 'distribucion-razas',
+            type: 'area',
+            height: '100%', // Se ajusta al contenedor de la tarjeta
+            width: '100%',
+            zoom: {
+                enabled: false,
+            },
+        },
+        series: [{
+            name: "Cantidad",
+            data: cantidadesDR,
+        }],
+        dataLabels: {
+            enabled: false,
+        },
+        stroke: {
+            curve: 'smooth',
+        },
+        title: {
+            text: 'Distribución de Razas',
+            align: 'center',
+        },
+        labels: razasDR,
+        responsive: [{
+            breakpoint: 768,
+            options: {
+                chart: {
+                    height: 250,
+                },
+            },
+        }],
+    };
+    const chart = new ApexCharts(document.querySelector('#distribucion-razas'), options);
+    chart.render();
     
-      const chart = new ApexCharts(document.querySelector('#distribucion-razas'), options);
-      chart.render();
     });
     
     //grafica 2
@@ -67,15 +68,23 @@ export class DiagramasComponent implements OnInit {
         chart: {
           id: 'activo-inactivo',
           type: 'donut',
-          height: 320,
-          width: 320
+          height: '100%',
+          width: '100%',
         },
         series: cantidadesInac,
         labels: actInac,
         title: {
           text: 'Activos e Inactivos',
           align: 'center'
-        }
+        },
+        responsive: [{
+          breakpoint: 768,
+          options: {
+              chart: {
+                  height: 250,
+              },
+          },
+      }],  
       };
     
       const chart = new ApexCharts(document.querySelector('#activo-inactivo'), options);
@@ -84,74 +93,72 @@ export class DiagramasComponent implements OnInit {
     
     //grafica 3
     this.DbConexionService.getEvolucionPesoPorAnimal().subscribe(data => {
-
-  // Extraemos las fechas (solo la parte de la fecha, sin la hora)
-  const fechasPA = data.map(item => item.fecha_medicion.split('T')[0]); 
-  // Extraemos los pesos
-  const pesosPA = data.map(item => item.peso); 
-  // Extraemos los animal_id (para mostrar el cuy correspondiente)
-  const animalIds = data.map(item => item.animal_id);
-
-  const options: ApexOptions = {
-    chart: {
-      id: 'evolucion-peso',
-      type: 'line',
-      height: 410,
-      width: 490
-    },
-    series: [
-      {
-        name: 'Peso',
-        data: pesosPA  // Los datos del peso en el eje Y
-      }
-    ],
-    xaxis: {
-      categories: fechasPA,  // Las fechas como categorías en el eje X
-      title: {
-        text: 'Fecha de Medición'
-      },
-      tickAmount: 6, // Opcional: para controlar el número de ticks visibles en el eje X
-    },
-    yaxis: {
-      title: {
-        text: 'Peso (Kg)'
-      }
-    },
-    title: {
-      text: 'Evolución de Peso por Animal',
-      align: 'left'
-    },
-    tooltip: {
-      custom: function({ seriesIndex, dataPointIndex, w }: { seriesIndex: number; dataPointIndex: number; w: any }) {
-        const fecha = fechasPA[dataPointIndex];
-        const peso = w.globals.series[seriesIndex][dataPointIndex]; 
-        const animalId = animalIds[dataPointIndex];
-
-        return `<div class="arrow_box">
-                  <strong>Peso:</strong> ${peso} Kg<br>
-                  <strong>Cuy (ID):</strong> ${animalId}
-                </div>`;
-      }
-    },
-    responsive: [{
-      breakpoint: 480,
-      options: {
+      const fechasPA = data.map(item => item.fecha_medicion.split('T')[0]); 
+      const pesosPA = data.map(item => item.peso); 
+      const animalIds = data.map(item => item.animal_id);
+      
+      const options: ApexOptions = {
         chart: {
-          height: 300  
+          id: 'evolucion-peso',
+          type: 'line',
+          height: '100%',
+          width: '100%',
+          zoom: {
+            enabled: false,
+          },
         },
-        xaxis: {
-          labels: {
-            rotate: -45 
+        series: [
+          {
+            name: 'Peso',
+            data: pesosPA  
           }
-        }
-      }
-    }]
-  };
+        ],
+        xaxis: {
+          categories: fechasPA,
+          title: {
+            text: 'Fecha de Medición'
+          },
+          tickAmount: 6,
+          },
+          yaxis: {
+            title: {
+              text: 'Peso (Kg)'
+            }
+          },
+          title: {
+            text: 'Evolución de Peso por Animal',
+            align: 'left'
+          },
+          tooltip: {
+            custom: function({ seriesIndex, dataPointIndex, w }: { seriesIndex: number; dataPointIndex: number; w: any }) {
+              const fecha = fechasPA[dataPointIndex];
+              const peso = w.globals.series[seriesIndex][dataPointIndex]; 
+              const animalId = animalIds[dataPointIndex];
+              
+              return `<div class="arrow_box">
+              <strong>Peso:</strong> ${peso} Kg<br>
+              <strong>Cuy (ID):</strong> ${animalId}
+              </div>`;
+            }
+          },
+          responsive: [{
+            breakpoint: 768,
+            options: {
+              chart: {
+                height: 250,  
+              },
+              xaxis: {
+                labels: {
+                  rotate: -45,
+                }
+              }
+            }
+          }]
+        };
 
-  const chart = new ApexCharts(document.querySelector('#evolucion-peso'), options);
-  chart.render();
-    });
-
+        const chart = new ApexCharts(document.querySelector('#evolucion-peso'), options);
+        chart.render();
+      });
     
     //grafica 4
     this.DbConexionService.getEventosPorTipo().subscribe(data => {
@@ -161,7 +168,11 @@ export class DiagramasComponent implements OnInit {
       const  options = {
         series: cantidadesEv,
         chart: {
-        height: 390,
+        height: '100%',
+        width: '100%',
+        zoom:{
+          enable: false,
+        },
         type: 'radialBar',
       },
       plotOptions: {
@@ -197,12 +208,18 @@ export class DiagramasComponent implements OnInit {
       },
       colors: ['#1ab7ea', '#0084ff', '#39539E', '#0077B5'],
       labels: tiposEv,
+      title:{
+        text: 'Eventos por Tipo',
+      },
       responsive: [{
-        breakpoint: 480,
+        breakpoint: 768,
         options: {
           legend: {
               show: false
-          }
+          },
+          chart: {
+            height: 250,
+          },
         }
       }]
       };
@@ -219,38 +236,50 @@ export class DiagramasComponent implements OnInit {
       const options = {
         chart: {
           id: 'cantidad-por-animal',
-          type: 'line', // Usamos un gráfico de líneas
-          height: 200,
-          width: 900
+          type: 'line',
+          height: '100%',
+          width: '100%',
+          zoom:{
+            enable: false,
+          },
         },
         series: [
           {
             name: 'Cantidad',
-            data: cantidadesMA // Usamos las cantidades de los animales
+            data: cantidadesMA 
           }
         ],
         dataLabels: {
           enabled: false
         },
         stroke: {
-          curve: 'smooth' // Líneas suaves
+          curve: 'smooth' 
         },
         xaxis: {
-          categories: labelsA,  // Los animal_id como categorías en el eje X
+          categories: labelsA,  
           title: {
             text: 'Animal ID'
           }
         },
         tooltip: {
           x: {
-            format: 'dd/MM/yy'  // El formato para el tooltip
+            format: 'dd/MM/yy'  
           }
         },
         title: {
           text: 'Cantidad por Animal',
           align: 'center'
-        }
+        },
+        responsive: [{
+          breakpoint: 768,
+          options: {
+              chart: {
+                  height: 250,
+              },
+          },
+      }],
       };
+
       const chart = new ApexCharts(document.querySelector('#mediciones-animal'), options);
       chart.render();
     });
@@ -264,8 +293,11 @@ export class DiagramasComponent implements OnInit {
         chart: {
           id: 'animales-mes',
           type: 'line',
-          height: 200,
-          width: 800
+          height: '100%',
+          width: '100%',
+          zoom:{
+              enabled: false,
+          }
         },
         series: [
           {
@@ -282,7 +314,15 @@ export class DiagramasComponent implements OnInit {
         title: {
           text: 'Animales por Mes',
           align: 'center'
-        }
+        },
+        responsive: [{
+          breakpoint: 768,
+          options: {
+              chart: {
+                height: 250, 
+              },
+          },
+      }],
       };
     
       const chart = new ApexCharts(document.querySelector('#animales-mes'), options);
@@ -299,8 +339,11 @@ export class DiagramasComponent implements OnInit {
         chart: {
           id: 'promedio-peso',
           type: 'line',
-          height: 200,
-          width: 400
+          height: '100%',
+          width: '100%',
+          zoom:{
+            enabled: false,
+          }
         },
         series: [
           {
@@ -344,8 +387,8 @@ export class DiagramasComponent implements OnInit {
         chart: {
           id: 'grafica-relacion-peso-fecha',
           type: 'bar',
-          height: 450,
-          width: 400
+          height: '100%',
+          width: '100%'
         },
         series: [
           {
@@ -372,7 +415,15 @@ export class DiagramasComponent implements OnInit {
         title: {
           text: 'Relación Peso-Fecha',
           align: 'center'
-        }
+        },
+        responsive: [{
+          breakpoint: 768,
+          options: {
+              chart: {
+                  height: 250,
+              },
+          },
+      }],
       };
     
       const chart = new ApexCharts(document.querySelector('#relacion-peso'), options);
