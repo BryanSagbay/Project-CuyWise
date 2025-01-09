@@ -16,9 +16,10 @@ export class ImagenesComponent {
   constructor(private dbConexionService: DbConexionService) {}
 
   ngOnInit() {
+    // Se obtienen las mediciones
     this.dbConexionService.getMedicion().subscribe(
       (data: Mediciones[]) => {
-        this.mediciones = data; // Almacena directamente los datos
+        this.mediciones = data; 
         console.log(this.mediciones);
       },
       (error) => {
