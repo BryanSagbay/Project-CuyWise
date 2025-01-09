@@ -45,6 +45,19 @@ export class DiagramasComponent implements OnInit {
             align: 'center',
         },
         labels: razasDR,
+        xaxis: {
+          labels: {
+            show: false,
+          }
+        },
+        yaxis: {
+          labels: {
+            show: false,
+          }
+        },
+        grid:{
+          show: false, 
+        },
         responsive: [{
             breakpoint: 768,
             options: {
@@ -116,14 +129,23 @@ export class DiagramasComponent implements OnInit {
         xaxis: {
           categories: fechasPA,
           title: {
-            text: 'Fecha de Medición'
+           //text: 'Fecha de Medición'
           },
           tickAmount: 6,
+          labels:{
+            show: false,
+          },
+          axisBorder: {
+            show: false,
+          },
           },
           yaxis: {
             title: {
-              text: 'Peso (Kg)'
-            }
+              //text: 'Peso (Kg)'
+            },
+            labels:{
+              show: false,
+            },
           },
           title: {
             text: 'Evolución de Peso por Animal',
@@ -140,6 +162,9 @@ export class DiagramasComponent implements OnInit {
               <strong>Cuy (ID):</strong> ${animalId}
               </div>`;
             }
+          },
+          grid:{
+            show: false,
           },
           responsive: [{
             breakpoint: 768,
@@ -308,8 +333,22 @@ export class DiagramasComponent implements OnInit {
         xaxis: {
           categories: labelsxMA,
           title: {
-            text: 'Mes'
+            //text: 'Mes'
+          },
+          labels:{
+            show: false,
+          },
+          axisBorder: {
+            show: false,
           }
+        },
+        yaxis:{
+          labels:{
+            show: false,
+          }
+        },
+        grid:{
+          show: false,
         },
         title: {
           text: 'Animales por Mes',
@@ -358,10 +397,22 @@ export class DiagramasComponent implements OnInit {
           curve: 'smooth'
         },
         xaxis: {
-          categories: razasPR, // Usamos las razas como categorías en el eje X
+          labels:{
+            show: false,
+          },
+          categories: razasPR, 
           title: {
-            text: 'Raza'
-          }
+            //text: 'Raza'
+          },
+          axisBorder: {
+            show: false // Oculta la línea del borde del eje X
+          },
+        },
+        yaxis:{
+          show: false,
+        },
+        grid:{
+          show: false,
         },
         tooltip: {
           x: {
@@ -382,53 +433,71 @@ export class DiagramasComponent implements OnInit {
     this.DbConexionService.getRelacionPesoFecha().subscribe(data => {
       const fechasRPF = data.map(item => new Date(item.fecha_medicion).toLocaleDateString());
       const pesosRPF = data.map(item => item.peso);
-    
+  
       const options = {
-        chart: {
-          id: 'grafica-relacion-peso-fecha',
-          type: 'bar',
-          height: '100%',
-          width: '100%'
-        },
-        series: [
-          {
-            name: 'Peso',
-            data: pesosRPF
-          }
-        ],
-        plotOptions: {
-          bar: {
-            borderRadius: 4,
-            borderRadiusApplication: 'end',
-            horizontal: true,
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        xaxis: {
-          categories: fechasRPF,
-          title: {
-            text: 'Fecha de Medición'
-          }
-        },
-        title: {
-          text: 'Relación Peso-Fecha',
-          align: 'center'
-        },
-        responsive: [{
-          breakpoint: 768,
-          options: {
-              chart: {
-                  height: 250,
-              },
+          chart: {
+              id: 'grafica-relacion-peso-fecha',
+              type: 'bar',
+              height: '100%',
+              width: '100%'
           },
-      }],
+          series: [{
+              name: 'Peso',
+              data: pesosRPF
+          }],
+          plotOptions: {
+              bar: {
+                  borderRadius: 10,
+                  borderRadiusApplication: 'end',
+                  horizontal: true,
+              }
+          },
+          dataLabels: {
+              enabled: false
+          },
+          xaxis: {
+              categories: fechasRPF,
+              labels:{
+                  show: false,
+              },
+              axisBorder: {
+                  show: false // Oculta la línea del borde del eje X
+              },
+              axisTicks: {
+                  show: false // Oculta las marcas del eje X
+              }
+          },
+          yaxis:{
+              labels:{
+                  show: false
+              },
+              axisBorder: {
+                  show: false // Oculta la línea del borde del eje Y si es necesario
+              },
+              axisTicks: {
+                  show: false // Oculta las marcas del eje Y si es necesario
+              }
+          },
+          grid:{
+              show: false, // Asegúrate de que la cuadrícula esté oculta
+          },
+          title: {
+              text: 'Relación Peso-Fecha',
+              align: 'center'
+          },
+          responsive: [{
+              breakpoint: 768,
+              options: {
+                  chart: {
+                      height: 250,
+                  },
+              },
+          }],
       };
-    
+  
       const chart = new ApexCharts(document.querySelector('#relacion-peso'), options);
       chart.render();
-    });
+    });  
     
     }
 
