@@ -25,10 +25,12 @@ ngOnInit(){
   });
 }
 
+// Funciones para cambiar el estado de los animales
 getBadgeClass(isActive: boolean): string {
   return isActive ? 'badge badge-sm bg-success text-white' : 'badge badge-sm bg-danger text-white';
 }
 
+// Funciones para cambiar el estado de los animales
 getStatusText(isActive: boolean): string {
   return isActive ? 'Activo' : 'Inactivo';
 }
