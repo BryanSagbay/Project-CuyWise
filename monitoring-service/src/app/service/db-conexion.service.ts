@@ -40,13 +40,14 @@ export class DbConexionService {
       catchError(this.handleError)
     );
   }
-
+  //Metodo para buscar por id de Medicion
   getDataIdMedicion(id: number): Observable<Mediciones> {
     return this.http.get<Mediciones>(`${this.url}/mediciones/${id}`).pipe(
       catchError(this.handleError)
     );
   }
 
+  // Metodo para buscar por id de Evento
   getDataIdEvent(id: number): Observable<Eventos> {
     return this.http.get<Eventos>(`${this.url}/eventos/${id}`).pipe(
       catchError(this.handleError)
