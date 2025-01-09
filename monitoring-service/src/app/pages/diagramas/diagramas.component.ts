@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Chart, registerables, Title } from 'chart.js';
+import { Chart, Legend, registerables, Title } from 'chart.js';
 import { DbConexionService } from '../../service/db-conexion.service';
 import ApexCharts from 'apexcharts';
 import { ApexOptions } from 'apexcharts'; 
@@ -89,6 +89,9 @@ export class DiagramasComponent implements OnInit {
         title: {
           text: 'Activos e Inactivos',
           align: 'center'
+        },
+        legend:{
+          show: false,
         },
         responsive: [{
           breakpoint: 768,
@@ -283,8 +286,22 @@ export class DiagramasComponent implements OnInit {
         xaxis: {
           categories: labelsA,  
           title: {
-            text: 'Animal ID'
+            //text: 'Animal ID'
+          },
+          labels:{
+            show: false,
+          },
+          axisBorder:{
+            show: false,
+          },
+        },
+        yaxis: {
+          labels:{
+            show: false,
           }
+        },
+        grid:{
+          show: false,
         },
         tooltip: {
           x: {
