@@ -17,6 +17,7 @@ constructor(private DbConexionService:DbConexionService){
 
 }
 ngOnInit(){
+  // Se obtienen las mediciones
   this.DbConexionService.getMedicion().subscribe( (data:Mediciones[]) => {
     this.mediciones = data
   },

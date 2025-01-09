@@ -17,6 +17,7 @@ export class LogsComponent {
 
 }
 ngOnInit(){
+  // Se obtienen los logs
   this.DbConexionService.getEvent().subscribe( (data:Eventos[]) => {
     this.eventos = data
   },
