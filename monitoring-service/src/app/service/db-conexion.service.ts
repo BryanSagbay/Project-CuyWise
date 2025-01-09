@@ -22,12 +22,14 @@ export class DbConexionService {
   );
   }
 
+  // Método para obtener mediciones
   getMedicion(): Observable<Mediciones[]> {
     return this.http.get<Mediciones[]>(`${this.url}/mediciones`).pipe(
       catchError(this.handleError)
     );
   }
-
+  
+  // Método para obtener eventos
   getEvent(): Observable<Eventos[]> {
     return this.http.get<Eventos[]>(`${this.url}/eventos`).pipe(
       catchError(this.handleError)
