@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Chart, Legend, registerables, Title } from 'chart.js';
+import { Chart, Colors, Legend, registerables, Title } from 'chart.js';
 import { DbConexionService } from '../../service/db-conexion.service';
 import ApexCharts from 'apexcharts';
 import { ApexOptions } from 'apexcharts'; 
@@ -30,6 +30,9 @@ export class DiagramasComponent implements OnInit {
                 enabled: false,
             },
         },
+        fill: {
+          colors: ['#3768d0'],
+        },
         series: [{
             name: "Cantidad",
             data: cantidadesDR,
@@ -54,9 +57,6 @@ export class DiagramasComponent implements OnInit {
           labels: {
             show: false,
           },
-        },
-        fill: {
-          colors: ['#0077B5'],
         },
         grid:{
           show: false, 
@@ -315,6 +315,9 @@ export class DiagramasComponent implements OnInit {
           text: 'Cantidad por Animal',
           align: 'center'
         },
+        fill:{
+          colors:['#3768d0'],
+        },
         responsive: [{
           breakpoint: 768,
           options: {
@@ -369,6 +372,9 @@ export class DiagramasComponent implements OnInit {
         },
         grid:{
           show: false,
+        },
+        fill:{
+          colors:['#3768d0']
         },
         title: {
           text: 'Animales por Mes',
@@ -433,6 +439,9 @@ export class DiagramasComponent implements OnInit {
         },
         grid:{
           show: false,
+        },
+        fill:{
+          colors:['#3768d0'],
         },
         tooltip: {
           x: {
