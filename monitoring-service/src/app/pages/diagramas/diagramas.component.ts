@@ -53,7 +53,10 @@ export class DiagramasComponent implements OnInit {
         yaxis: {
           labels: {
             show: false,
-          }
+          },
+        },
+        fill: {
+          colors: ['#0077B5'],
         },
         grid:{
           show: false, 
