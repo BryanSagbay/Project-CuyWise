@@ -31,7 +31,7 @@ export class DiagramasComponent implements OnInit {
             },
         },
         fill: {
-          colors: ['#3768d0'],
+          colors: ['#aed6f1'],
         },
         series: [{
             name: "Cantidad",
@@ -441,7 +441,7 @@ export class DiagramasComponent implements OnInit {
           show: false,
         },
         fill:{
-          colors:['#3768d0'],
+          colors:['#76d7c4'],
         },
         tooltip: {
           x: {
@@ -513,6 +513,9 @@ export class DiagramasComponent implements OnInit {
           title: {
               text: 'Relación Peso-Fecha',
               align: 'center'
+          },
+          fill:{
+            colors:['#5dade2'],
           },
           responsive: [{
               breakpoint: 768,
