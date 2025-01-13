@@ -22,7 +22,6 @@
 
 .card {
     flex: 1;
-    margin: 10px;
     display: flex;
     flex-direction: column;
 }
