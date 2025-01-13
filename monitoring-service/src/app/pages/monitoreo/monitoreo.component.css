@@ -37,3 +37,15 @@
         flex: 1 1 100%;
     }
 }
+
+@media (max-width: 992px) {
+    .col-8, .col-4 {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 516px) {
+    .col-8, .col-4 {
+        flex: 1 1 100%;
+    }
+}
