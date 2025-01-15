@@ -13,28 +13,11 @@ import {
     getMedicionesPorAnimal,
     getAnimalesPorMesAnio,
     getRelacionPesoFecha,
-    getPromedioPesoPorRaza,
-    getCamara
+    getPromedioPesoPorRaza
 } 
     from "../controllers/pcws.controller.js";
 
 const router = Router();
-
-/**
- * @swagger
- * /camara:
- *  get:
- *   summary: Obtener la imagen de la cámara
- *  responses:
- *   200:
- *   description: Imagen de la cámara obtenida con éxito
- *  content:
- *  image/jpeg:
- *  schema:
- *  type: string
- * format: base64
- */
-router.get("/camara", getCamara);
 
 /**
  * @swagger
