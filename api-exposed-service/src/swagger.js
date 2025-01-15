@@ -2,7 +2,7 @@ import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
 // Configuración de Swagger
-export const swaggerOptions = {
+const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
@@ -19,6 +19,6 @@ export const swaggerOptions = {
   apis: ['./src/routes/*.js'],
 };
 
-export const swaggerDocs = swaggerJsDoc(swaggerOptions);
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
-//export { swaggerUi, swaggerDocs };
+export { swaggerUi, swaggerDocs };
