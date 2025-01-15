@@ -13,11 +13,14 @@ import {
     getMedicionesPorAnimal,
     getAnimalesPorMesAnio,
     getRelacionPesoFecha,
-    getPromedioPesoPorRaza 
+    getPromedioPesoPorRaza,
+    getCamara
 } 
     from "../controllers/pcws.controller.js";
 
 const router = Router();
+
+
 
 /**
  * @swagger
