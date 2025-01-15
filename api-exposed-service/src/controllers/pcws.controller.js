@@ -1,5 +1,7 @@
 import { pool } from "../db.js";
 
+//Funcion para la camara
+
 // Funciones para obtener los datos de las tablas de la base de datos
 export const getAnimales = async (req, res) => {
     try {
