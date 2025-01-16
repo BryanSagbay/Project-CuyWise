@@ -11,6 +11,7 @@ export const getAnimales = async (req, res) => {
     }
 };
 
+// Funciones para obtener los datos de las tablas de la base de datos
 export const getMediciones = async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM "Mediciones";');
