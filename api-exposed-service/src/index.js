@@ -7,6 +7,7 @@ import cors from 'cors';
 
 const app = express();
 
+// Middlewares
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cors());
