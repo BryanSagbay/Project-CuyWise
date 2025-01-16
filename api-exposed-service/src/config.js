@@ -1,4 +1,4 @@
-
+// Description: Configuration file for the API service.
 export const DB_USER = process.env.DB_USER;
 export const DB_PASSWORD = process.env.DB_PASSWORD;
 export const DB_HOST = process.env.DB_HOST;
