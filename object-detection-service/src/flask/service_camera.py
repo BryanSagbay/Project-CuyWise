@@ -8,3 +8,6 @@ results = model.predict(source=0, show=True)
 
 # Mostrar resultados
 print(results)
+
+# Cerrar la cámara
+model.close()
