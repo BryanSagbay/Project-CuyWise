@@ -22,6 +22,7 @@ export const getMediciones = async (req, res) => {
     }
 };
 
+// Funciones para obtener los datos de las tablas de la base de datos
 export const getEventos = async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM "Eventos";');
