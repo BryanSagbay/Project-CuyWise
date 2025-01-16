@@ -1,7 +1,9 @@
+#envorioment
+venv/
+
 #Node js
 node_modules
 .env
-.venv
 
 #Angular
 .vscode
