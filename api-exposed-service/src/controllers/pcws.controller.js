@@ -33,7 +33,7 @@ export const getEventos = async (req, res) => {
     }
 };
 
-//Funciones para buscar por ID
+//Funciones para buscar por ID Animales
 export const getAnimalById = async (req, res) => {
     try {
         const { id } = req.params;
