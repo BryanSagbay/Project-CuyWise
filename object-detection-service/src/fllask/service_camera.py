@@ -1,14 +1,10 @@
-from flask import Flask
-from flask import jsonify
+from ultralytics import YOLO
 
+# Cargar el modelo entrenado
+model = YOLO('../models/model_clasification.pt')
 
-def create_app():
-    app=Flask(__name__)
-    return app
+# Usar la cámara
+results = model.predict(source=0, show=True)
 
-app = create_app()
-
-@app.route('/camera', methods=['POST'])
-def camera():
-    # do something
-    return jsonify({'result': 'success'}), 200
+# Mostrar resultados
+print(results)
