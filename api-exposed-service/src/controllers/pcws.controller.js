@@ -45,6 +45,7 @@ export const getAnimalById = async (req, res) => {
     }
 }
 
+//Funciones para buscar por ID Mediciones
 export const getMedicionById = async (req, res) => {
     try {
         const { id } = req.params;
