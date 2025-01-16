@@ -78,3 +78,5 @@ El proyecto **CuyWise** tiene como objetivo la detección, monitoreo y gestión 
 	   ```
 
 ### Autores
+
+Este proyecto fue realizado para fines investigativos bajo el nombre del Proyecto CuyWise.
