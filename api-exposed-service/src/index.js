@@ -14,6 +14,7 @@ app.use(cors());
 app.use(pcwRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
+// Start the server
 app.listen(PORT, () => {
   console.log('Server is running on http://localhost:'+ PORT);
 }); 
