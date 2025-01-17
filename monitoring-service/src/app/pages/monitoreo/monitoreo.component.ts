@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { CameraService } from '../../service/camera.service';
 import { CommonModule } from '@angular/common';
+import { io } from 'socket.io-client';  // Asegúrate de importar socket.io-client
 
 @Component({
   selector: 'app-monitoreo',
@@ -8,50 +9,65 @@ import { CommonModule } from '@angular/common';
   templateUrl: './monitoreo.component.html',
   styleUrl: './monitoreo.component.css'
 })
-export class MonitoreoComponent  implements OnInit, OnDestroy {
-  imageBase64: string | null = null; // Imagen recibida
-  isCameraOn: boolean = false; // Estado de la cámara
+export class MonitoreoComponent implements OnInit, OnDestroy {
+  private socket: any;
+  public videoStream: string | null = null;
+  private cameraStarted: boolean = false;
 
-  constructor(private cameraService: CameraService) {}
+  constructor() {}
 
   ngOnInit(): void {
-    // Suscribirse a los frames del backend
-    this.cameraService.getVideoFrame().subscribe({
-      next: (imageBase64: string) => {
-        this.imageBase64 = imageBase64; // Actualizar la imagen
-      },
-      error: (error) => console.error('Error al recibir frames:', error),
+    // Conectarse al servidor de Flask
+    this.socket = io('http://localhost:5000');  // Asegúrate de que coincida con tu puerto de Flask
+
+    // Escuchar los frames de video emitidos desde el back-end
+    this.socket.on('video_frame', (imgBase64: string) => {
+      this.videoStream = imgBase64;  // Recibir el base64 y mostrarlo en el frontend
     });
   }
 
-  startCamera() {
-    this.cameraService.startCamera().subscribe({
-      next: (response) => {
-        console.log(response.message); // "Camera started"
-        this.isCameraOn = true;
-      },
-      error: (error) => {
-        console.error('Error al iniciar la cámara:', error);
-      },
+  public startCamera(): void {
+    if (this.cameraStarted) {
+      console.log('La cámara ya está corriendo');
+      return;  // Si ya está en marcha, no hacer nada
+    }
+  
+    fetch('http://localhost:5000/start_camera', {
+      method: 'POST',
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Cámara iniciada:', data);
+      this.cameraStarted = true;
+    })
+    .catch(err => {
+      console.error('Error al iniciar la cámara:', err);
     });
   }
-
-  stopCamera() {
-    this.cameraService.stopCamera().subscribe({
-      next: (response) => {
-        console.log(response.message); // "Camera stopped"
-        this.isCameraOn = false;
-      },
-      error: (error) => {
-        console.error('Error al detener la cámara:', error);
-      },
+  
+  public stopCamera(): void {
+    if (!this.cameraStarted) {
+      console.log('La cámara no está en marcha');
+      return;  // Si la cámara ya está detenida, no hacer nada
+    }
+  
+    fetch('http://localhost:5000/stop_camera', {
+      method: 'POST',
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Cámara detenida:', data);
+      this.cameraStarted = false;
+    })
+    .catch(err => {
+      console.error('Error al detener la cámara:', err);
     });
-  }
-
+  }  
+  
+  // Limpiar la conexión del socket al destruir el componente
   ngOnDestroy(): void {
-    // Detener la cámara si está activa al salir del componente
-    if (this.isCameraOn) {
-      this.stopCamera();
+    if (this.socket) {
+      this.socket.disconnect();
     }
   }
 }
