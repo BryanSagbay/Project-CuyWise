@@ -41,6 +41,16 @@ video {
     max-width: 100%;
 }
 
+.videocamera {
+    width: 100%; 
+    height: auto;
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+}
+
+
 
 @media (max-width: 768px) {
 
