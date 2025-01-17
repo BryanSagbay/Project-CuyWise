@@ -26,52 +26,53 @@ def handle_connect():
     print("Cliente conectado.")
 
 def video_stream():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(0)  # Abre la cámara
     if not cap.isOpened():
         print("Error: No se pudo abrir la cámara.")
         return
 
-    while camera_event.is_set():
+    while camera_event.is_set():  # Este es el loop que mantiene el flujo de video activo
         ret, frame = cap.read()
         if not ret:
             print("Error: No se pudo leer el frame.")
             continue
 
-        # Llama a la detección
+        # Llama a la detección de objetos
         detected, cuy_name, img_base64, peso = start_detection(frame)
 
         if detected:
             print(f"{cuy_name} detectado, Peso: {peso}")
         else:
-            # Si no se detecta nada, convierte el frame en base64
+            # Si no se detecta nada, convierte el frame a base64
             _, buffer = cv2.imencode('.jpg', frame)
             img_base64 = base64.b64encode(buffer).decode('utf-8')
 
         # Emitir el frame al cliente
         socketio.emit('video_frame', img_base64)
 
-        # Reducir la frecuencia de emisión para no sobrecargar la red
-        time.sleep(0.1)
+        # Reducir la frecuencia de emisión para no sobrecargar la red (ajustar este tiempo según sea necesario)
+        time.sleep(0.05)  # Hacer que el frame se emita más rápido
 
     cap.release()
 
-
 @app.route('/start_camera', methods=['POST'])
 def start_camera():
-    if camera_event.is_set():
+    if camera_event.is_set():  # Verificar si ya se está transmitiendo el video
         return jsonify({"message": "Camera already running"}), 400
 
-    camera_event.set()
-    threading.Thread(target=video_stream, daemon=True).start()
+    camera_event.set()  # Establece el evento para permitir la captura de video
+    threading.Thread(target=video_stream, daemon=True).start()  # Inicia el hilo de transmisión de video
     return jsonify({"message": "Camera started"}), 200
+
 
 @app.route('/stop_camera', methods=['POST'])
 def stop_camera():
     if not camera_event.is_set():
         return jsonify({"message": "Camera not running"}), 400
 
-    camera_event.clear()
+    camera_event.clear()  # Detiene el flujo de video
     return jsonify({"message": "Camera stopped"}), 200
+
 
 if __name__ == "__main__":
     socketio.run(app, host='0.0.0.0', port=5000)

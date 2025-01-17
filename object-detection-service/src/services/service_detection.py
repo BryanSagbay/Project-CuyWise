@@ -9,20 +9,26 @@ model = YOLO('/home/bryan/Documents/Proyects/Project-CuyWise/object-detection-se
 # Definir las clases de cuyes
 CUY_CLASSES = ['cuy1', 'cuy2', 'cuy3', 'cuy4', 'cuy5']
 
-# Función para iniciar la detección y el reconocimiento
+# Función para iniciar la detección
 def start_detection(frame):
     # Realizar la detección y clasificación con el modelo
     results = model(frame)  # Pasamos el frame de la cámara al modelo YOLO
     
     # Verificamos si se han detectado objetos
-    if results and results[0].boxes:  # Si el modelo detecta algo en la imagen
+    if results and hasattr(results[0], 'boxes') and results[0].boxes is not None:  # Verificamos si hay boxes detectadas
         boxes = results[0].boxes  # Coordenadas de las cajas
         labels = results[0].names  # Nombres de las clases detectadas
-        confidences = results[0].conf  # Confianza de las predicciones
+        probs = results[0].probs  # Probabilidades de las clases detectadas
+
+        # Si probs es None, lo manejamos adecuadamente
+        if probs is None:
+            print("No se han detectado probabilidades válidas. Revisando resultados...")
+            print(f"Resultados: {results}")  # Para depuración
+            return False, None, None, None
 
         for i, box in enumerate(boxes):
             label = labels[int(box.cls)]  # Obtener la etiqueta de la clase
-            confidence = confidences[i]  # Confianza de la detección
+            confidence = probs[i] if probs is not None else 0  # Usar probs para obtener la confianza de la predicción
 
             # Verificar si la clase detectada es uno de los cuyes (clases 'cuy1', 'cuy2', 'cuy3', 'cuy4', 'cuy5')
             if label in CUY_CLASSES and confidence > 0.5:  # Si es un cuy con suficiente confianza
@@ -38,7 +44,9 @@ def start_detection(frame):
 
                 return True, cuy_name, img_base64
 
-    return False, None, None, None  # Si no se detectó nada relevante
+    # Si no se detectó nada relevante o no se encontró probabilidad válida
+    print("No se detectaron objetos relevantes o no se encontraron probabilidades válidas.")
+    return False, None, None, None
 
 # Función para convertir la imagen a base64 (para enviar al frontend)
 def convert_image_to_base64(image):
