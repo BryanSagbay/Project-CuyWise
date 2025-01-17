@@ -1,26 +1,37 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { io } from 'socket.io-client';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class CameraService {
-  private baseUrl = 'http://127.0.0.1:5000';
+  private socket: any;
+  private url = 'http://localhost:4001';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Configura la conexión con el servidor Socket.IO
+    this.socket = io(this.url); // Cambia el URL si es necesario
+  }
 
-  // Funcion para iniciar la camara
+  // Iniciar la cámara (solicitud HTTP)
   startCamera(): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(`${this.baseUrl}/camera-event`, { action: 'start' }, { headers });
+    return this.http.post<any>('http://localhost:5000/start_camera', {});
   }
   
-  // funcion para detener la camara
   stopCamera(): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(`${this.baseUrl}/camera-event`, { action: 'stop' }, { headers });
+    return this.http.post<any>('http://localhost:5000/stop_camera', {});
+  }
+  
+
+  // Recibir frames de video en base64 desde el servidor
+  getVideoFrame(): Observable<string> {
+    return new Observable<string>((observer) => {
+      this.socket.on('video_frame', (data: string) => {
+        console.log('Frame recibido desde el servidor:', data.substring(0, 50)); // Muestra los primeros 50 caracteres
+        observer.next(data);
+      });      
+    });
   }
 }
-
