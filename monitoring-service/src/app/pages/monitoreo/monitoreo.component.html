@@ -9,6 +9,7 @@
                     <div *ngIf="imageBase64" style="margin-top: 20px">
                         <img [src]="'data:image/jpeg;base64,' + imageBase64" alt="Cámara en Vivo" />
                     </div>
+                    
                 </div>
                 <div class="mx-auto mt-2">
                     <button id="playButton" class="btn btn-white border" (click)="startCamera()"

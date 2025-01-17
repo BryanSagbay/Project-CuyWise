@@ -9,17 +9,20 @@ import { CommonModule } from '@angular/common';
   styleUrl: './monitoreo.component.css'
 })
 export class MonitoreoComponent  implements OnInit, OnDestroy {
-  imageBase64: string | null = null; // Imagen en base64 recibida desde el backend
+  imageBase64: string | null = null; // Imagen recibida
   isCameraOn: boolean = false; // Estado de la cámara
 
   constructor(private cameraService: CameraService) {}
 
   ngOnInit(): void {
-    this.cameraService.getVideoFrame().subscribe((imageBase64: string) => {
-      console.log('Frame recibido y asignado:', imageBase64.substring(0, 50)); // Primeros 50 caracteres
-      this.imageBase64 = imageBase64;
+    // Suscribirse a los frames del backend
+    this.cameraService.getVideoFrame().subscribe({
+      next: (imageBase64: string) => {
+        this.imageBase64 = imageBase64; // Actualizar la imagen
+      },
+      error: (error) => console.error('Error al recibir frames:', error),
     });
-  }  
+  }
 
   startCamera() {
     this.cameraService.startCamera().subscribe({
@@ -32,7 +35,7 @@ export class MonitoreoComponent  implements OnInit, OnDestroy {
       },
     });
   }
-  
+
   stopCamera() {
     this.cameraService.stopCamera().subscribe({
       next: (response) => {
@@ -44,9 +47,9 @@ export class MonitoreoComponent  implements OnInit, OnDestroy {
       },
     });
   }
-  
+
   ngOnDestroy(): void {
-    // Detener la cámara al destruir el componente
+    // Detener la cámara si está activa al salir del componente
     if (this.isCameraOn) {
       this.stopCamera();
     }
