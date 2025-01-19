@@ -6,7 +6,6 @@
                     <!-- Contenedor para la cámara -->
                     <!--<video #videoElement autoplay playsinline width="100%" height="auto"></video>-->
                     <!-- Mostrar el feed de la cámara -->
-
                     <div *ngIf="videoStream" class="videocamera px-3 py-2"> 
                         <img [src]="'data:image/jpeg;base64,' + videoStream" alt="Video Stream" />
                     </div>
