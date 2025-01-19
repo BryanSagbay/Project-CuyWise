@@ -16,7 +16,7 @@ export class DbConexionService {
 
   constructor(private http: HttpClient) { }
 
-// Método para obtener animales
+  // Método para obtener animales
   getAnimales(): Observable<Animales[]> {
     return this.http.get<Animales[]>(`${this.url}/animales`).pipe(
       catchError(this.handleError)
