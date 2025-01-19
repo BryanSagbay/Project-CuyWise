@@ -16,8 +16,9 @@ export class MedicionesComponent {
 constructor(private DbConexionService:DbConexionService){
 
 }
+
+// Función para obtener las mediciones
 ngOnInit(){
-  // Se obtienen las mediciones
   this.DbConexionService.getMedicion().subscribe( (data:Mediciones[]) => {
     this.mediciones = data
   },
