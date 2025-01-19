@@ -1,3 +1,5 @@
+
+// Definición de la interfaz de los animales
 export interface Animales{
     id: number;
     nombre: string;
