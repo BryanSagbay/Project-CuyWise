@@ -13,11 +13,10 @@ export class LogsComponent {
 
   eventos: Eventos[] = [];
   
-  constructor(private DbConexionService:DbConexionService){
+  constructor(private DbConexionService:DbConexionService){}
 
-}
+// Función para obtener los logs
 ngOnInit(){
-  // Se obtienen los logs
   this.DbConexionService.getEvent().subscribe( (data:Eventos[]) => {
     this.eventos = data
   },
