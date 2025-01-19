@@ -29,8 +29,8 @@ export class HomeComponent {
 
   constructor(private route: ActivatedRoute, private router: Router) {}
 
+  // Método para inicializar el componente 
   ngOnInit(): void {
-    // Escuchar cambios de ruta para actualizar el breadcrumb
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
