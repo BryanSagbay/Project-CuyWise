@@ -13,9 +13,7 @@ export class MedicionesComponent {
 
   mediciones: Mediciones[] = [];
 
-constructor(private DbConexionService:DbConexionService){
-
-}
+constructor(private DbConexionService:DbConexionService){}
 
 // Función para obtener las mediciones
 ngOnInit(){
