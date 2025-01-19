@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CameraService {
+  
   private socket: any;
 
   constructor(private http: HttpClient) {
