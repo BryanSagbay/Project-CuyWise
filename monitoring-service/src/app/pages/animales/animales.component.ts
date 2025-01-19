@@ -16,6 +16,7 @@ export class AnimalesComponent {
   constructor(private DbConexionService:DbConexionService){
 
 }
+// Función para obtener los animales 
 ngOnInit(){
   this.DbConexionService.getAnimales().subscribe( (data:Animales[]) => {
     this.animales = data
