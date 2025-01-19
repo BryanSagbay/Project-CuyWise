@@ -1,3 +1,5 @@
+
+// Definición de la interfaz Mediciones
 export interface Mediciones{
     id: number ;
     animal_id: number;
