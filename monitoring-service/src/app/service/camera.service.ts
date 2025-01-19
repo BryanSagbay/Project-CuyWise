@@ -19,6 +19,7 @@ export class CameraService {
     return this.http.post<any>('http://localhost:5000/start_camera', {});
   }
   
+  // Para la camara 
   stopCamera(): Observable<any> {
     return this.http.post<any>('http://localhost:5000/stop_camera', {});
   }
