@@ -11,6 +11,7 @@ import { Eventos } from '../models/Eventos';
 })
 export class DbConexionService {
 
+  // Url para conectar al backend nodejs
   private url = 'http://localhost:4001';
 
   constructor(private http: HttpClient) { }
