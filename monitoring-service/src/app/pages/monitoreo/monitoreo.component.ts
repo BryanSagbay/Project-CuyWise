@@ -19,7 +19,6 @@ export class MonitoreoComponent implements OnInit, OnDestroy {
 
   // Inicializar el socket y escuchar el evento 'video_frame'
   ngOnInit(): void {
-
     this.socket = io('http://localhost:5000');  
     this.socket.on('video_frame', (imgBase64: string) => {
       this.videoStream = imgBase64;  
