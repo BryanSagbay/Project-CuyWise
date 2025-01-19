@@ -11,7 +11,7 @@ export class CameraService {
 
   constructor(private http: HttpClient) {
     // Configura la conexión con el servidor Socket.IO
-    this.socket = io('http://localhost:4001'); // Cambia el URL si es necesario
+    this.socket = io('http://localhost:4001'); 
   }
 
   // Iniciar la cámara (solicitud HTTP)
