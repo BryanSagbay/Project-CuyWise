@@ -17,19 +17,19 @@ export class MonitoreoComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit(): void {
-    // Conectarse al servidor de Flask
+
     this.socket = io('http://localhost:5000');  // Asegúrate de que coincida con tu puerto de Flask
 
-    // Escuchar los frames de video emitidos desde el back-end
     this.socket.on('video_frame', (imgBase64: string) => {
       this.videoStream = imgBase64;  // Recibir el base64 y mostrarlo en el frontend
     });
   }
 
+  // Función para iniciar la cámara
   public startCamera(): void {
     if (this.cameraStarted) {
       console.log('La cámara ya está corriendo');
-      return;  // Si ya está en marcha, no hacer nada
+      return;
     }
   
     fetch('http://localhost:5000/start_camera', {
@@ -45,6 +45,7 @@ export class MonitoreoComponent implements OnInit, OnDestroy {
     });
   }
   
+  // Función para detener la cámara
   public stopCamera(): void {
     if (!this.cameraStarted) {
       console.log('La cámara no está en marcha');
