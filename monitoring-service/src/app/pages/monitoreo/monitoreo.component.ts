@@ -10,18 +10,19 @@ import { io } from 'socket.io-client';  // Asegúrate de importar socket.io-clie
   styleUrl: './monitoreo.component.css'
 })
 export class MonitoreoComponent implements OnInit, OnDestroy {
+  
   private socket: any;
   public videoStream: string | null = null;
   private cameraStarted: boolean = false;
 
   constructor() {}
 
+  // Inicializar el componente
   ngOnInit(): void {
 
-    this.socket = io('http://localhost:5000');  // Asegúrate de que coincida con tu puerto de Flask
-
+    this.socket = io('http://localhost:5000');  
     this.socket.on('video_frame', (imgBase64: string) => {
-      this.videoStream = imgBase64;  // Recibir el base64 y mostrarlo en el frontend
+      this.videoStream = imgBase64;  
     });
   }
 
