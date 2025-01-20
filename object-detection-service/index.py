@@ -1,78 +1,23 @@
-from flask import Flask, render_template, request
-from flask_socketio import SocketIO, emit
-from flask_cors import CORS
-from flask import jsonify
-from flask import jsonify
-import threading
-import cv2
-import time
-import base64
-from src.services.service_detection import start_detection
+import os
+from dotenv import load_dotenv
+from src.services.service_detection import run_detection_service
+from src.services.service_weight import run_weight_service
 
-app = Flask(__name__)
-CORS(app, origins=["http://localhost:4200"])  # Permitir solo conexiones de Angular
+def main():
+    # Cargar variables de entorno
+    load_dotenv()
 
-socketio = SocketIO(app, cors_allowed_origins="http://localhost:4200")
+    print("Iniciando el sistema...")
 
-camera_on = False
-camera_event = threading.Event()  # Event para controlar el flujo de la cámara
+    try:
+        # Iniciar servicios
+        print("Iniciando servicio de detección...")
+        run_detection_service()
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@socketio.on('connect')
-def handle_connect():
-    print("Cliente conectado.")
-
-def video_stream():
-    cap = cv2.VideoCapture(0)  # Abre la cámara
-    if not cap.isOpened():
-        print("Error: No se pudo abrir la cámara.")
-        return
-
-    while camera_event.is_set():  # Este es el loop que mantiene el flujo de video activo
-        ret, frame = cap.read()
-        if not ret:
-            print("Error: No se pudo leer el frame.")
-            continue
-
-        # Llama a la detección de objetos
-        detected, cuy_name, img_base64, peso = start_detection(frame)
-
-        if detected:
-            print(f"{cuy_name} detectado, Peso: {peso}")
-        else:
-            # Si no se detecta nada, convierte el frame a base64
-            _, buffer = cv2.imencode('.jpg', frame)
-            img_base64 = base64.b64encode(buffer).decode('utf-8')
-
-        # Emitir el frame al cliente
-        socketio.emit('video_frame', img_base64)
-
-        # Reducir la frecuencia de emisión para no sobrecargar la red (ajustar este tiempo según sea necesario)
-        time.sleep(0.05)  # Hacer que el frame se emita más rápido
-
-    cap.release()
-
-@app.route('/start_camera', methods=['POST'])
-def start_camera():
-    if camera_event.is_set():  # Verificar si ya se está transmitiendo el video
-        return jsonify({"message": "Camera already running"}), 400
-
-    camera_event.set()  # Establece el evento para permitir la captura de video
-    threading.Thread(target=video_stream, daemon=True).start()  # Inicia el hilo de transmisión de video
-    return jsonify({"message": "Camera started"}), 200
-
-
-@app.route('/stop_camera', methods=['POST'])
-def stop_camera():
-    if not camera_event.is_set():
-        return jsonify({"message": "Camera not running"}), 400
-
-    camera_event.clear()  # Detiene el flujo de video
-    return jsonify({"message": "Camera stopped"}), 200
-
+        print("Iniciando servicio de pesaje...")
+        run_weight_service()
+    except Exception as e:
+        print(f"Error al iniciar el sistema: {e}")
 
 if __name__ == "__main__":
-    socketio.run(app, host='0.0.0.0', port=5000)
+    main()
