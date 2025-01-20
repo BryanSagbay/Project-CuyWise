@@ -12,6 +12,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 # Crear el motor de conexión para interactuar con la base de datos
 engine = create_engine(DATABASE_URL)
 
+# Probar la conexión a la base de datos
 try:
     with engine.connect() as connection:
         print("Conexión a la base de datos exitosa.")
