@@ -1,3 +1,4 @@
+# Description: This file is used to test the YOLO model with the camera.
 from ultralytics import YOLO
 
 model = YOLO('../models/model_clasification.pt')
