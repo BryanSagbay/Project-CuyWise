@@ -5,6 +5,7 @@ model = YOLO('/home/bryan/Documents/Proyects/Project-CuyWise/object-detection-se
 
 results = model.predict(source=0, show=True)
 
+# imprimir resultados en consola
 print(results)
 
 # cerrar
