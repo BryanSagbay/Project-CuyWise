@@ -3,6 +3,7 @@ from ultralytics import YOLO
 
 model = YOLO('/home/bryan/Documents/Proyects/Project-CuyWise/object-detection-service/src/models/model_clasification.pt')
 
+# cargar la cámara
 results = model.predict(source=0, show=True)
 
 # imprimir resultados en consola
