@@ -4,7 +4,7 @@ from hx711 import HX711
 def medir_peso():
     try:
         # Inicializar el sensor HX711 (ajusta los pines según tu configuración)
-        hx = HX711(dout_pin=5, pd_sck_pin=6)
+        hx = HX711(dout_pin=29, pd_sck_pin=31)
         hx.set_scale(7050)  # Ajustar escala según tu calibración
         hx.tare()  # Tarar la balanza antes de medir
 
