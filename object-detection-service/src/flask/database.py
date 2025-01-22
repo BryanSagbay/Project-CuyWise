@@ -37,7 +37,6 @@ def insertar_medicion(animal_id, peso, imagen_base64):
         conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
 
-        # Insertar la medición
         query = """
         INSERT INTO Mediciones (animal_id, peso, imagen_base64)
         VALUES (%s, %s, %s)
