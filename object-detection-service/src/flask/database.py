@@ -16,7 +16,6 @@ def registrar_evento(animal_id, tipo_evento, descripcion):
         conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
 
-        # Insertar el evento
         query = """
         INSERT INTO Eventos (animal_id, tipo_evento, descripcion)
         VALUES (%s, %s, %s)
