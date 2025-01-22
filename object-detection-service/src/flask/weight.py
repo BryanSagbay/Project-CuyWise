@@ -9,7 +9,8 @@ def medir_peso():
         hx.tare()  # Tarar la balanza antes de medir
 
         # Medir el peso
-        peso = hx.get_units(10)  # Obtener un promedio de 10 lecturas
+        # Obtener un promedio de 10 lecturas
+        peso = hx.get_units(10)  
         print(f"Peso detectado: {peso} gramos")
         return peso
     except Exception as e:

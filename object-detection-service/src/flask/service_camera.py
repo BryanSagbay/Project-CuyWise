@@ -14,7 +14,16 @@ def model_YOLO():
         # Iniciar captura de video
         cap = cv2.VideoCapture(0)
 
+        # Tiempo de espera entre detecciones
+        detection_interval = 3  # en segundos
+        last_detection_time = 0  # Última detección registrada
+
         while True:
+            current_time = time.time()
+            # Verificar si ha pasado el tiempo suficiente desde la última detección
+            if current_time - last_detection_time < detection_interval:
+                continue  # Saltar el procesamiento hasta que pase el intervalo
+
             ret, frame = cap.read()
             if not ret:
                 print("Error al capturar el video.")
@@ -25,6 +34,7 @@ def model_YOLO():
             results = model.predict(source=frame, show=True)
 
             # Procesar resultados
+            detected = False  # Bandera para determinar si se detectó algo
             for result in results:
                 probs = result.probs
 
@@ -35,6 +45,7 @@ def model_YOLO():
                             cuy_id = prob.argmax() + 1  # Ajustar para que los IDs sean de 1 a 5
                             print(f"¡Cuy {cuy_id} detectado!")
                             registrar_evento(cuy_id, "Detección", f"Se detectó el cuy con ID {cuy_id}")
+                            detected = True
 
                             # Tomar el peso y guardar en la base de datos
                             peso = medir_peso()
@@ -49,8 +60,9 @@ def model_YOLO():
                                 registrar_evento(cuy_id, "Error", "No se pudo medir el peso del cuy.")
                             break  # Salir del bucle si ya se procesó un cuy
 
-            # Esperar antes de la siguiente iteración
-            time.sleep(3)
+            # Si se detectó algo, actualizar el tiempo de la última detección
+            if detected:
+                last_detection_time = time.time()
 
     except Exception as e:
         print(f"Error al iniciar el sistema: {e}")
