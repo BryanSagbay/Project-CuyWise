@@ -9,6 +9,7 @@ DB_CONFIG = {
     'port': 5432
 }
 
+# Funcion para registrar evento
 def registrar_evento(animal_id, tipo_evento, descripcion):
     try:
         # Conectar a la base de datos
