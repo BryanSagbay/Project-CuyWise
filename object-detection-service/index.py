@@ -1,7 +1,8 @@
 import os
 from dotenv import load_dotenv
-from src.services.service_detection import run_detection_service
-from src.services.service_weight import run_weight_service
+from src.flask.service_camera import model_YOLO
+#from src.services.service_detection import run_detection_service
+#from src.services.service_weight import run_weight_service
 
 def main():
     # Cargar variables de entorno
@@ -12,10 +13,10 @@ def main():
     try:
         # Iniciar servicios
         print("Iniciando servicio de detección...")
-        run_detection_service()
+        model_YOLO()
 
-        print("Iniciando servicio de pesaje...")
-        run_weight_service()
+        #print("Iniciando servicio de pesaje...")
+        #run_weight_service()
     except Exception as e:
         print(f"Error al iniciar el sistema: {e}")
 
