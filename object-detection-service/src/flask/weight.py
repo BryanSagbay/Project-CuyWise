@@ -8,7 +8,6 @@ def medir_peso():
         hx.set_scale(7050)  # Ajustar escala según tu calibración
         hx.tare()  # Tarar la balanza antes de medir
 
-        # Medir el peso
         # Obtener un promedio de 10 lecturas
         peso = hx.get_units(10)  
         print(f"Peso detectado: {peso} gramos")
