@@ -5,7 +5,7 @@ def medir_peso():
     try:
         hx = HX711(dout_pin=29, pd_sck_pin=31)
         hx.set_scale(7050)  
-        hx.tare() 
+        hx.tare()  # Tarar la balanza antes de medir
 
         # Obtener un promedio de 10 lecturas
         peso = hx.get_units(10)  
