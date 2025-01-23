@@ -7,6 +7,7 @@ def medir_peso():
         hx.set_scale(7050)  
         hx.tare() 
 
+        # Obtener un promedio de 10 lecturas
         peso = hx.get_units(10)  
         print(f"Peso detectado: {peso} gramos")
         return peso
