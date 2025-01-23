@@ -1,6 +1,5 @@
 from hx711 import HX711
 
-# Función para detectar peso con el módulo HX711
 def medir_peso():
     try:
         hx = HX711(dout_pin=29, pd_sck_pin=31)
