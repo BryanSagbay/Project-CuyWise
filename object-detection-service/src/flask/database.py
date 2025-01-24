@@ -27,6 +27,7 @@ def registrar_evento(animal_id, tipo_evento, descripcion):
         cursor.close()
         conn.close()
 
+# Función para insertar medición en la base de datos
 def insertar_medicion(animal_id, peso, imagen_base64):
     try:
         conn = psycopg2.connect(**DB_CONFIG)
