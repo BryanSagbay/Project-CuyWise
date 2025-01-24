@@ -22,7 +22,7 @@ def model_YOLO():
             current_time = time.time()
             # Verificar si ha pasado el tiempo suficiente desde la última detección
             if current_time - last_detection_time < detection_interval:
-                continue  # Saltar el procesamiento hasta que pase el intervalo
+                continue
 
             ret, frame = cap.read()
             if not ret:
