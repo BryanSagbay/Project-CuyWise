@@ -39,7 +39,6 @@ def insertar_medicion(animal_id, peso, imagen_base64):
         cursor.execute(query, (animal_id, peso, imagen_base64))
         conn.commit()
 
-        # Registrar evento relacionado con la medición
         registrar_evento(animal_id, "Medición", f"Se registró una medición de peso: {peso} gramos")
     except Exception as e:
         print(f"Error al insertar medición: {e}")
