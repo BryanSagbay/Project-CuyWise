@@ -1,6 +1,5 @@
 import psycopg2
 
-# Configuración de la conexión a la base de datos
 DB_CONFIG = {
     'dbname': 'cuywise',
     'user': 'bryxn',
