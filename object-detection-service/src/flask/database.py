@@ -8,6 +8,7 @@ DB_CONFIG = {
     'port': 5432
 }
 
+# Funcion para registrar evento
 def registrar_evento(animal_id, tipo_evento, descripcion):
     try:
         conn = psycopg2.connect(**DB_CONFIG)
