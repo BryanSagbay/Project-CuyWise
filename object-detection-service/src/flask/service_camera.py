@@ -8,6 +8,7 @@ from ultralytics import YOLO
 # Función principal con YOLO
 def model_YOLO():
     try:
+        # Cargar el modelo YOLO
         model = YOLO('/home/bryan/Documents/Proyects/Project-CuyWise/object-detection-service/src/models/model_clasification.pt')
 
         # Iniciar captura de video
