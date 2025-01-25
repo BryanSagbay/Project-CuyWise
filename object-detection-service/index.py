@@ -15,7 +15,7 @@ def main():
         print("Iniciando servicio de detección...")
         model_YOLO()
 
-        #print("Iniciando servicio de pesaje...")
+        print("Iniciando servicio de pesaje...")
         #run_weight_service()
     except Exception as e:
         print(f"Error al iniciar el sistema: {e}")
