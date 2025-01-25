@@ -11,7 +11,7 @@ def main():
     print("Iniciando el sistema...")
 
     try:
-        # Iniciar 
+        # Iniciar servicios
         print("Iniciando servicio de detección...")
         model_YOLO()
 
