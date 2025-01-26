@@ -20,6 +20,5 @@ def main():
     except Exception as e:
         print(f"Error al iniciar el sistema: {e}")
 
-# Iniciar el sistema
 if __name__ == "__main__":
     main()
