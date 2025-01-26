@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from src.flask.service_camera import model_YOLO
-from src.services.service_detection import run_detection_service
+#from src.services.service_detection import run_detection_service
 from src.services.service_weight import run_weight_service
 
 def main():
