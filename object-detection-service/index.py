@@ -5,7 +5,7 @@ from src.services.service_detection import run_detection_service
 from src.services.service_weight import run_weight_service
 
 def main():
-    Carga variables de entorno
+    # Carga variables de entorno
     load_dotenv()
 
     print("Iniciando el sistema...")
