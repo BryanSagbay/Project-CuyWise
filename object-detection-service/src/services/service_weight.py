@@ -11,15 +11,16 @@ def medir_peso():
         GPIO.cleanup()  # Liberar GPIO antes de iniciar
 
         # Inicializar el HX711
-        hx = HX711(dout_pin=DT, pd_sck_pin=SCK)
-        hx.set_scale(7050)  # Ajustar escala según calibración
+        hx = HX711(DT, SCK)
+        hx.set_reference_unit(1)  # Ajusta este valor después de calibrar
+        hx.reset()
         hx.tare()  # Tarar la balanza antes de medir
 
         print("Coloca un peso en la balanza...")
         time.sleep(2)
 
         # Obtener un promedio de 10 lecturas
-        peso = hx.get_units(10)  
+        peso = hx.get_weight(10)
         print(f"Peso detectado: {peso:.2f} gramos")
 
         return peso
@@ -29,6 +30,8 @@ def medir_peso():
         return None
 
     finally:
+        hx.power_down()
+        hx.power_up()
         GPIO.cleanup()  # Asegurar que los GPIO se liberen
 
 # Ejecutar la medición de peso en bucle
