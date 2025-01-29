@@ -1,41 +1,56 @@
 from hx711 import HX711
-import Jetson.GPIO as GPIO
+import RPi.GPIO as GPIO
 import time
 
-# Definir pines en Jetson Nano Orin
-DT = 29  # Pin 29 (GPIO01) - Data
-SCK = 31  # Pin 31 (GPIO11) - Clock
+def setup_hx711():
+    hx = HX711(dout_pin=29, pd_sck_pin=31)
 
-def medir_peso():
+    hx.reset()
+
+    print("Realizando tara, por favor no coloque peso en la balanza...")
+    time.sleep(2)
+    tara_value = hx.get_raw_data_mean()
+    if tara_value is not None:
+        hx.offset = tara_value
+        print(f"Tara completada, offset establecido en: {hx.offset}")
+    else:
+        print("Error al realizar la tara. Verifique las conexiones.")
+
+    print("HX711 configurado y tarado. Listo para leer.")
+    return hx
+
+def read_weight(hx):
     try:
-        GPIO.cleanup()  # Liberar GPIO antes de iniciar
+        raw_weight = hx.get_raw_data_mean()
 
-        # Inicializar el HX711
-        hx = HX711(DT, SCK)
-        hx.set_reference_unit(1)  # Ajusta este valor después de calibrar
-        hx.reset()
-        hx.tare()  # Tarar la balanza antes de medir
+        reference_unit = 1 
+        weight = (raw_weight - hx.offset) / reference_unit if raw_weight is not None else None
 
-        print("Coloca un peso en la balanza...")
-        time.sleep(2)
-
-        # Obtener un promedio de 10 lecturas
-        peso = hx.get_weight(10)
-        print(f"Peso detectado: {peso:.2f} gramos")
-
-        return peso
-
+        return weight
     except Exception as e:
-        print(f"Error al medir peso: {e}")
+        print(f"Error al leer el peso: {e}")
         return None
 
+def main():
+    """Función principal para leer pesos continuamente."""
+    GPIO.setmode(GPIO.BOARD)
+
+    hx = setup_hx711()
+
+    try:
+        while True:
+            weight = read_weight(hx)
+            if weight is not None:
+                print(f"Peso: {weight:.2f} gramos")
+            else:
+                print("Error al obtener el peso.")
+
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("\nSaliendo del programa...")
     finally:
         hx.power_down()
-        hx.power_up()
-        GPIO.cleanup()  # Asegurar que los GPIO se liberen
+        GPIO.cleanup()
 
-# Ejecutar la medición de peso en bucle
 if __name__ == "__main__":
-    while True:
-        peso = medir_peso()
-        time.sleep(2)  # Esperar antes de la próxima medición
+    main()
