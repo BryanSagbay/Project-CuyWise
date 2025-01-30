@@ -1,96 +1,96 @@
-import sqlite3
-from datetime import datetime
+# config.py
+DB_CONFIG = {
+    'dbname': 'cuyes_db',
+    'user': 'usuario',
+    'password': 'password',
+    'host': 'localhost',
+    'port': 5432
+}
 
-class DatabaseManager:
-    def __init__(self, db_name='cuyes_monitoring.db'):
-        self.conn = sqlite3.connect(db_name)
-        self.create_tables()
-        self.initialize_animals()
-        
-    def create_tables(self):
-        cursor = self.conn.cursor()
-        
-        # Tabla Animales
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS Animales (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nombre TEXT NOT NULL,
-                raza TEXT,
-                criadero TEXT,
-                fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                activo BOOLEAN DEFAULT TRUE
-            )
-        ''')
-        
-        # Tabla Mediciones
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS Mediciones (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                animal_id INTEGER NOT NULL,
-                peso REAL NOT NULL,
-                imagen_base64 TEXT,
-                fecha_medicion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (animal_id) REFERENCES Animales(id)
-            )
-        ''')
-        
-        # Tabla Eventos
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS Eventos (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                animal_id INTEGER NOT NULL,
-                tipo_evento TEXT NOT NULL,
-                descripcion TEXT,
-                fecha_evento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (animal_id) REFERENCES Animales(id)
-            )
-        ''')
-        self.conn.commit()
+# detector.py
+from ultralytics import YOLO
+import cv2
 
-    def initialize_animals(self):
-        cursor = self.conn.cursor()
+def detectar_cuyes():
+    model = YOLO('models/classification.pt')
+    cap = cv2.VideoCapture(0)
+    
+    while cap.isOpened():
+        success, frame = cap.read()
+        if not success:
+            break
         
-        # Verificar si ya existen los cuyes
-        cursor.execute('SELECT COUNT(*) FROM Animales')
-        count = cursor.fetchone()[0]
+        results = model(frame)
+        for result in results:
+            for box in result.boxes:
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                label = result.names[int(box.cls)]
+                confidence = box.conf[0].item()
+                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                cv2.putText(frame, f'{label}: {confidence:.2f}', (x1, y1 - 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
         
-        if count == 0:
-            cuyes = [
-                ('cuy1', 'Raza1', 'Criadero Principal'),
-                ('cuy2', 'Raza2', 'Criadero Principal'),
-                ('cuy3', 'Raza3', 'Criadero Secundario'),
-                ('cuy4', 'Raza1', 'Criadero Principal'),
-                ('cuy5', 'Raza2', 'Criadero Secundario')
-            ]
-            
-            cursor.executemany('''
-                INSERT INTO Animales (nombre, raza, criadero)
-                VALUES (?, ?, ?)
-            ''', cuyes)
-            self.conn.commit()
+        cv2.imshow('Monitoreo de Cuyes', frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    
+    cap.release()
+    cv2.destroyAllWindows()
 
-    def log_event(self, animal_id, event_type, description=None):
-        cursor = self.conn.cursor()
-        cursor.execute('''
-            INSERT INTO Eventos (animal_id, tipo_evento, descripcion)
-            VALUES (?, ?, ?)
-        ''', (animal_id, event_type, description))
-        self.conn.commit()
+# balanza.py
+import time
+import RPi.GPIO as GPIO
+from hx711 import HX711
 
-    def save_measurement(self, animal_id, weight, image_base64=None):
-        cursor = self.conn.cursor()
-        cursor.execute('''
-            INSERT INTO Mediciones (animal_id, peso, imagen_base64)
-            VALUES (?, ?, ?)
-        ''', (animal_id, weight, image_base64))
-        self.conn.commit()
+def obtener_peso():
+    hx = HX711(dout=5, pd_sck=7)
+    hx.zero()
+    time.sleep(0.5)
+    peso = hx.get_weight(5)
+    hx.power_down()
+    return peso
 
-    def close(self):
-        self.conn.close()
+# database.py
+import psycopg2
+from config import DB_CONFIG
 
-# Para probar la base de datos
-if __name__ == '__main__':
-    db = DatabaseManager()
-    db.log_event(1, 'Prueba', 'Evento de prueba inicial')
-    db.close()
-    print("Base de datos configurada exitosamente!")
+def conectar_db():
+    return psycopg2.connect(**DB_CONFIG)
+
+def registrar_medicion(animal_id, peso):
+    conn = conectar_db()
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO Mediciones (animal_id, peso) 
+        VALUES (%s, %s)
+    """, (animal_id, peso))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def registrar_evento(animal_id, tipo_evento, descripcion):
+    conn = conectar_db()
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO Eventos (animal_id, tipo_evento, descripcion) 
+        VALUES (%s, %s, %s)
+    """, (animal_id, tipo_evento, descripcion))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+# main.py
+from detector import detectar_cuyes
+from balanza import obtener_peso
+from database import registrar_medicion, registrar_evento
+
+def main():
+    print("Iniciando sistema de monitoreo de cuyes...")
+    detectar_cuyes()
+    peso = obtener_peso()
+    print(f"Peso detectado: {peso}g")
+    registrar_medicion(animal_id=1, peso=peso)
+    registrar_evento(animal_id=1, tipo_evento="Registro de peso", descripcion=f"Peso registrado: {peso}g")
+
+if __name__ == "__main__":
+    main()
