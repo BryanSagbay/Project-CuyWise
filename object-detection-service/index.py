@@ -24,7 +24,6 @@ if __name__ == "__main__":
     main()
 
 
-import cv2
 import time
 from database import create_tables, insert_medicion, insert_evento, get_animal_id
 from vision import detect_cuy
@@ -36,54 +35,49 @@ def main():
     scale = Scale()
     scale.tare()
     
-    cap = cv2.VideoCapture(0)
-    last_detection = time.time()
+    # Configurar tiempos
+    last_detection = 0
     cooldown = 30  # segundos entre mediciones
     
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            print("Error en la cámara")
-            break
-        
-        class_name, confidence, imagen_base64 = detect_cuy(frame)
-        
-        if class_name and (time.time() - last_detection) > cooldown:
-            animal_id = get_animal_id(class_name)
+    # Iniciar detección
+    detection_gen = detect_cuy()
+    
+    try:
+        for class_name, confidence, imagen_base64, frame in detection_gen:
+            current_time = time.time()
             
-            if animal_id:
-                # Tomar medición del peso
-                weight = None
-                attempts = 0
+            if class_name and (current_time - last_detection) > cooldown:
+                animal_id = get_animal_id(class_name)
                 
-                while attempts < 5 and not weight:
-                    weight = scale.get_weight()
-                    attempts += 1
-                    time.sleep(0.5)
-                
-                if weight:
-                    if insert_medicion(animal_id, weight, imagen_base64):
-                        insert_evento(animal_id, 'pesaje_exitoso', 
-                                    f"Peso registrado: {weight} kg")
-                        print(f"Medición exitosa para {class_name}: {weight} kg")
+                if animal_id:
+                    # Tomar medición del peso
+                    weight = None
+                    attempts = 0
+                    
+                    while attempts < 5 and not weight:
+                        weight = scale.get_weight()
+                        attempts += 1
+                        time.sleep(0.5)
+                    
+                    if weight:
+                        if insert_medicion(animal_id, weight, imagen_base64):
+                            insert_evento(animal_id, 'pesaje_exitoso', 
+                                       f"Peso registrado: {weight} kg")
+                            print(f"Medición exitosa para {class_name}: {weight} kg")
+                        else:
+                            insert_evento(animal_id, 'error_peso', 
+                                       "Error al guardar medición")
                     else:
                         insert_evento(animal_id, 'error_peso', 
-                                    "Error al guardar medición")
-                else:
-                    insert_evento(animal_id, 'error_peso', 
-                                "No se pudo obtener el peso")
-                    print("Error al obtener el peso")
-                
-                last_detection = time.time()
-        
-        # Mostrar vista previa
-        cv2.imshow('Monitoreo Cuyes', frame)
-        
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-    
-    cap.release()
-    cv2.destroyAllWindows()
+                                   "No se pudo obtener el peso")
+                        print("Error al obtener el peso")
+                    
+                    last_detection = current_time
+                    
+    except KeyboardInterrupt:
+        print("\nSistema detenido por el usuario")
+    finally:
+        model.close()
 
 if __name__ == "__main__":
     main()
