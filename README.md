@@ -1,4 +1,4 @@
-s # Documentación del Proyecto CuyWise
+ # Documentación del Proyecto CuyWise
 
 ## Tabla de Contenidos
 1. [Descripción General](#descripción-general)
