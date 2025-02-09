@@ -88,9 +88,3 @@ CREATE TABLE "Mediciones" (
 
 CREATE TABLE "Eventos" (
     "id" SERIAL PRIMARY KEY,
-    "animal_id" INTEGER NOT NULL,
-    "tipo_evento" VARCHAR NOT NULL,
-    "descripcion" TEXT,
-    "fecha_evento" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY ("animal_id") REFERENCES "Animales" ("id")
-);
