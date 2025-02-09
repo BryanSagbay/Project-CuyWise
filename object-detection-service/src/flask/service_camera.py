@@ -70,6 +70,4 @@ def model_YOLO():
 
 CREATE TABLE "Animales" (
     "id" SERIAL PRIMARY KEY,
-    "nombre" VARCHAR NOT NULL,
-    "raza" VARCHAR,
-    "criadero" VARCHAR,
+    "nombre" VARCHAR NOT NULL
