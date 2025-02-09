@@ -69,5 +69,3 @@ def model_YOLO():
         registrar_evento(None, "Error", f"Error al iniciar el sistema: {e}")
 
 CREATE TABLE "Animales" (
-    "id" SERIAL PRIMARY KEY,
-    "nombre" VARCHAR NOT NULL
