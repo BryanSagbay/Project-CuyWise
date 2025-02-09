@@ -76,6 +76,3 @@ CREATE TABLE "Animales" (
     "fecha_registro" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "activo" BOOLEAN DEFAULT TRUE
 );
-
-CREATE TABLE "Mediciones" (
-
