@@ -73,6 +73,3 @@ CREATE TABLE "Animales" (
     "nombre" VARCHAR NOT NULL,
     "raza" VARCHAR,
     "criadero" VARCHAR,
-    "fecha_registro" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "activo" BOOLEAN DEFAULT TRUE
-);
