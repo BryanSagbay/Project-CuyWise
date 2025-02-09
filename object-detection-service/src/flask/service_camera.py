@@ -68,7 +68,6 @@ def model_YOLO():
         print(f"Error al iniciar el sistema: {e}")
         registrar_evento(None, "Error", f"Error al iniciar el sistema: {e}")
 
-tengo que desarrollar un sistema de monitoreo y toma de peso, es decir el asunto trata de lo siguiente, tengo una balanza modulo hx711 y una jetson nano orin donde estoy ahorita trabajando ten en cuenta que para conectar a los pines estoy usando jetson.gpio, el flujo es el siguiente el animal para esste proyecto de investigacion es el cuy, este animal cuy va a proceder a estar monitoreo es decir yo tengo un modelo YOLO preentrenado con datos de los 5 cuyes es decir ese modelo tiene 5 clases cuy1, cuy2, cuy3, cuy4, cuy5 es decir va a estar monitoreando a esos 5 cuys la camara, entonces este va estar con el modelo yolo detectando el cuy1 o si es el cuy2 o cuy3 asi sucesivamente, entonces una vez que este detecte el cuy es decir cuy1 va a proceder a tomar el peso ya que la camara va a estar aputando a la balanza es decir cuando se detecte el cuy el cuy va a estar ya sobre la balanza y estos datos se deben guardar tanto peso, una imagen y el id del cuy, este es la base de datos que tengo y esta debe guardar todos esos datos por cuy detectado:
 CREATE TABLE "Animales" (
     "id" SERIAL PRIMARY KEY,
     "nombre" VARCHAR NOT NULL,
