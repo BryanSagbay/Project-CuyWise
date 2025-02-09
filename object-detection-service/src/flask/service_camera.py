@@ -78,13 +78,4 @@ CREATE TABLE "Animales" (
 );
 
 CREATE TABLE "Mediciones" (
-    "id" SERIAL PRIMARY KEY,
-    "animal_id" INTEGER NOT NULL,
-    "peso" FLOAT NOT NULL,
-    "imagen_base64" TEXT,
-    "fecha_medicion" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY ("animal_id") REFERENCES "Animales" ("id")
-);
 
-CREATE TABLE "Eventos" (
-    "id" SERIAL PRIMARY KEY,
