@@ -95,4 +95,3 @@ CREATE TABLE "Eventos" (
     "fecha_evento" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY ("animal_id") REFERENCES "Animales" ("id")
 );
-entonces bien ahora quiero desarrollar todo eso en python como puedo hacerlo
