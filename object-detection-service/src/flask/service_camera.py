@@ -67,5 +67,3 @@ def model_YOLO():
     except Exception as e:
         print(f"Error al iniciar el sistema: {e}")
         registrar_evento(None, "Error", f"Error al iniciar el sistema: {e}")
-
-CREATE TABLE "Animales" (
