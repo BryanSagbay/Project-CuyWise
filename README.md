@@ -78,3 +78,31 @@ El proyecto **CuyWise** tiene como objetivo la detección, monitoreo y gestión 
 ### Autores
 
 Este proyecto fue realizado para fines investigativos bajo el nombre del Proyecto CuyWise.
+COde:
+import time
+import RPi.GPIO as GPIO
+from hx711 import HX711  # Asegúrate de instalar esta librería
+
+# Configuración de pines (ajusta según tu conexión)
+DT = 15  # GPIO12 (Pin 15)
+SCK = 33  # GPIO13 (Pin 33)
+
+# Inicializar HX711
+hx = HX711(DT, SCK)
+hx.set_reading_format("MSB", "MSB")
+
+# Tara (poner la balanza en cero sin peso)
+hx.tare()
+print("Tara completada. Coloca un peso conocido para calibrar.")
+
+while True:
+    try:
+        peso = hx.get_weight(5)  # Lee el peso promedio de 5 muestras
+        print(f"Peso: {peso} unidades")
+        hx.power_down()
+        time.sleep(0.1)
+        hx.power_up()
+    except KeyboardInterrupt:
+        print("Saliendo...")
+        GPIO.cleanup()
+        break
