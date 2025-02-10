@@ -134,4 +134,5 @@ print(f"Factor de calibración calculado: {factor_calibracion}")
 
 # Guardar este valor y usarlo en futuras lecturas
 
- 
+ ![image](https://github.com/user-attachments/assets/ae1d6d2d-1034-4d80-9008-20a8e6dc87c6)
+
