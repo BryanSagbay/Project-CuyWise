@@ -106,3 +106,30 @@ while True:
         print("Saliendo...")
         GPIO.cleanup()
         break
+
+Calinbrar balanza
+
+import time
+import RPi.GPIO as GPIO
+from hx711 import HX711
+
+DT = 15  # GPIO12
+SCK = 33  # GPIO13
+
+hx = HX711(DT, SCK)
+hx.set_reading_format("MSB", "MSB")
+hx.tare()
+print("Tara completada. Coloca un peso conocido.")
+
+time.sleep(2)
+
+# Tomar lectura con el peso de calibración
+peso_real = 500.0  # Cambia por el peso real en gramos (ej. 500g)
+lectura_sin_calibrar = hx.get_weight(5)
+factor_calibracion = lectura_sin_calibrar / peso_real
+
+print(f"Factor de calibración calculado: {factor_calibracion}")
+
+# Guardar este valor y usarlo en futuras lecturas
+
+ 
