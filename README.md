@@ -85,10 +85,5 @@ COde:
 import RPi.GPIO as GPIO
 from hx711 import HX711
 
-# Configuración de pines
-DT = 15   # GPIO12 (Pin 15)
-SCK = 33  # GPIO13 (Pin 33)
-
-# Inicializar HX711
 
 
