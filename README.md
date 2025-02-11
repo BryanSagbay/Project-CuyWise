@@ -94,13 +94,6 @@ hx = HX711(dout=DT, pd_sck=SCK)
 
 # Leer datos sin procesar
 while True:
-    try:
-        raw_value = hx.get_raw_data()
-        if raw_value is not None:
-            print(f"Lectura cruda: {raw_value}")
-        else:
-            print("Error en la lectura")
-        time.sleep(0.5)
 
     except KeyboardInterrupt:
         print("Saliendo...")
