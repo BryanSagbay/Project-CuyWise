@@ -78,12 +78,3 @@ El proyecto **CuyWise** tiene como objetivo la detección, monitoreo y gestión 
 ### Autores
 
 Este proyecto fue realizado para fines investigativos bajo el nombre del Proyecto CuyWise.
-COde:
-
-```bash
-	     import time
-import RPi.GPIO as GPIO
-from hx711 import HX711
-
-
-
