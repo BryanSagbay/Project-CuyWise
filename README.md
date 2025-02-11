@@ -125,14 +125,4 @@ print("Tara completada. Coloca un peso conocido.")
 
 time.sleep(2)
 
-# Tomar lectura con el peso de calibración
-peso_real = 500.0  # Cambia por el peso real en gramos (ej. 500g)
-lectura_sin_calibrar = hx.get_weight(5)
-factor_calibracion = lectura_sin_calibrar / peso_real
-
-print(f"Factor de calibración calculado: {factor_calibracion}")
-
-# Guardar este valor y usarlo en futuras lecturas
-
- ![image](https://github.com/user-attachments/assets/ae1d6d2d-1034-4d80-9008-20a8e6dc87c6)
 
