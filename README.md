@@ -114,8 +114,5 @@ Calinbrar balanza
 import time
 import RPi.GPIO as GPIO
 
-hx = HX711(DT, SCK)
-hx.set_reading_format("MSB", "MSB")
-hx.tare()
 
 
