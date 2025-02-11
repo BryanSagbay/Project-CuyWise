@@ -91,8 +91,4 @@ SCK = 33  # GPIO13 (Pin 33)
 
 # Inicializar HX711
 
-    except KeyboardInterrupt:
-        print("Saliendo...")
-        GPIO.cleanup()
-
 
