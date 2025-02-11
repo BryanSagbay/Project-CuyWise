@@ -105,14 +105,5 @@ while True:
     except KeyboardInterrupt:
         print("Saliendo...")
         GPIO.cleanup()
-        break
-
-```
-
-Calinbrar balanza
-
-import time
-import RPi.GPIO as GPIO
-
 
 
