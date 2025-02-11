@@ -113,10 +113,6 @@ Calinbrar balanza
 
 import time
 import RPi.GPIO as GPIO
-from hx711 import HX711
-
-DT = 15  # GPIO12
-SCK = 33  # GPIO13
 
 hx = HX711(DT, SCK)
 hx.set_reading_format("MSB", "MSB")
