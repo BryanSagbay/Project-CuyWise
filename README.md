@@ -121,8 +121,5 @@ SCK = 33  # GPIO13
 hx = HX711(DT, SCK)
 hx.set_reading_format("MSB", "MSB")
 hx.tare()
-print("Tara completada. Coloca un peso conocido.")
-
-time.sleep(2)
 
 
