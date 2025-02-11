@@ -90,10 +90,6 @@ DT = 15   # GPIO12 (Pin 15)
 SCK = 33  # GPIO13 (Pin 33)
 
 # Inicializar HX711
-hx = HX711(dout=DT, pd_sck=SCK)
-
-# Leer datos sin procesar
-while True:
 
     except KeyboardInterrupt:
         print("Saliendo...")
