@@ -78,12 +78,6 @@ def obtener_id_animal(nombre):
     cur.execute("SELECT id FROM Animales WHERE nombre = %s", (nombre,))
     animal = cur.fetchone()
     cur.close()
-    conn.close()
-    return animal[0] if animal else None
-
-def registrar_medicion(animal_id, peso):
-    conn = conectar_db()
-    cur = conn.cursor()
 
 
 
