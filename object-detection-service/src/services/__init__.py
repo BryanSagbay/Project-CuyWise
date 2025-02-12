@@ -73,11 +73,6 @@ def conectar_db():
     return psycopg2.connect(**DB_CONFIG)
 
 def obtener_id_animal(nombre):
-    conn = conectar_db()
-    cur = conn.cursor()
-    cur.execute("SELECT id FROM Animales WHERE nombre = %s", (nombre,))
-    animal = cur.fetchone()
-    cur.close()
 
 
 
