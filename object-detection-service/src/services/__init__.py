@@ -1,9 +1,4 @@
-# config.py
-DB_CONFIG = {
-    'dbname': 'cuyes_db',
-    'user': 'usuario',
-    'password': 'password',
-    'host': 'localhost',
+
     'port': 5432
 }
 
