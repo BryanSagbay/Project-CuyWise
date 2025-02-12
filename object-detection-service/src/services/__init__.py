@@ -1,7 +1,4 @@
 
-    'port': 5432
-}
-
 # detector.py
 from ultralytics import YOLO
 import cv2
