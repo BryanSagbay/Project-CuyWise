@@ -103,12 +103,3 @@ def registrar_evento(animal_id, tipo_evento, descripcion):
     cur.close()
     conn.close()
 
-# main.py
-from detector import detectar_cuyes
-
-def main():
-    print("Iniciando sistema de monitoreo de cuyes...")
-    detectar_cuyes()
-
-if __name__ == "__main__":
-    main()
