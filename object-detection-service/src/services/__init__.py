@@ -65,10 +65,4 @@ def obtener_peso():
     hx.power_up()
     return max(0, int(peso))
 
-# database.py
-import psycopg2
-from config import DB_CONFIG
-
-def conectar_db():
-    ret
 
