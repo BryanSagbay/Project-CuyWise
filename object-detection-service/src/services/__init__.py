@@ -89,10 +89,6 @@ def registrar_medicion(animal_id, peso):
         VALUES (%s, %s)
     """, (animal_id, peso))
     conn.commit()
-    cur.close()
-    conn.close()
 
-def registrar_evento(animal_id, tipo_evento, descripcion):
-    conn = conectar_db()
 
 
