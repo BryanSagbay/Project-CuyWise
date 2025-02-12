@@ -70,10 +70,5 @@ import psycopg2
 from config import DB_CONFIG
 
 def conectar_db():
-    return psycopg2.connect(**DB_CONFIG)
-
-def obtener_id_animal(nombre):
-
-
-
+    ret
 
