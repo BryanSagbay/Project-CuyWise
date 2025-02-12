@@ -94,8 +94,5 @@ def registrar_medicion(animal_id, peso):
 
 def registrar_evento(animal_id, tipo_evento, descripcion):
     conn = conectar_db()
-    cur = conn.cursor()
-    cur.execute("""
-        INSERT INTO Eventos (animal_id, tipo_evento, descripcion) 
-}
+
 
