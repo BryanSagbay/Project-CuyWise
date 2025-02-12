@@ -84,11 +84,7 @@ def obtener_id_animal(nombre):
 def registrar_medicion(animal_id, peso):
     conn = conectar_db()
     cur = conn.cursor()
-    cur.execute("""
-        INSERT INTO Mediciones (animal_id, peso) 
-        VALUES (%s, %s)
-    """, (animal_id, peso))
-    conn.commit()
+
 
 
 
