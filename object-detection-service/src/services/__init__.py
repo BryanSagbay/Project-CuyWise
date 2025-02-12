@@ -97,9 +97,5 @@ def registrar_evento(animal_id, tipo_evento, descripcion):
     cur = conn.cursor()
     cur.execute("""
         INSERT INTO Eventos (animal_id, tipo_evento, descripcion) 
-        VALUES (%s, %s, %s)
-    """, (animal_id, tipo_evento, descripcion))
-    conn.commit()
-    cur.close()
-    conn.close()
+}
 
