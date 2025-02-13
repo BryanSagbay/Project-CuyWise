@@ -11,7 +11,3 @@ def detectar_cuyes():
     
     while cap.isOpened():
         success, frame = cap.read()
-        if not success:
-            break
-        
-        results = model(frame)
