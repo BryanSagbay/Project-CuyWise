@@ -32,8 +32,4 @@ def detectar_cuyes():
                 if animal_id:
                     registrar_medicion(animal_id, peso)
                     registrar_evento(animal_id, "Registro de peso", f"Peso registrado: {peso}g")
-                    print("Guardado con éxito en la base de datos")
-                else:
-                    print("Error: No se encontró el ID del animal en la base de datos")
-        
-        cv2.imshow('Monitoreo de Cuyes', frame)
+         
