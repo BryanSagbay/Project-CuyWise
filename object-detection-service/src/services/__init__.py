@@ -53,8 +53,5 @@ def obtener_peso():
     hx.set_reading_format("MSB", "MSB")
     time.sleep(0.5)
     peso = hx.get_weight(5)
-    hx.power_down()
-    hx.power_up()
-    return max(0, int(peso))
 
 
