@@ -28,8 +28,5 @@ def detectar_cuyes():
                 peso = obtener_peso()
                 print(f"Peso detectado: {peso}g")
                 
-                animal_id = obtener_id_animal(label)
-                if animal_id:
-                    registrar_medicion(animal_id, peso)
-                    registrar_evento(animal_id, "Registro de peso", f"Peso registrado: {peso}g")
+                animal_id = obtener_id_animal(label
          
