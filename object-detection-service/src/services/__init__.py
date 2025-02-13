@@ -37,5 +37,3 @@ def detectar_cuyes():
                     print("Error: No se encontró el ID del animal en la base de datos")
         
         cv2.imshow('Monitoreo de Cuyes', frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
