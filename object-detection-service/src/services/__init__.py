@@ -39,13 +39,3 @@ def detectar_cuyes():
         cv2.imshow('Monitoreo de Cuyes', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-    
-    cap.release()
-    cv2.destroyAllWindows()
-
-# balanza.py
-import time
-import Jetson.GPIO as GPIO
-from hx711 import HX711
-
-
