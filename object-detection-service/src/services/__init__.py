@@ -48,10 +48,4 @@ import time
 import Jetson.GPIO as GPIO
 from hx711 import HX711
 
-def obtener_peso():
-    hx = HX711(5, 7)
-    hx.set_reading_format("MSB", "MSB")
-    time.sleep(0.5)
-    peso = hx.get_weight(5)
-
 
