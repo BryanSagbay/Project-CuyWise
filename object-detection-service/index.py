@@ -1,88 +1,104 @@
-import os
-from dotenv import load_dotenv
-from src.flask.service_camera import model_YOLO
-#from src.services.service_detection import run_detection_service
-#from src.services.service_weight import run_weight_service
+import serial,time,collections
+import matplotlib.pyplot as plt
+import matplotlib.animation as animacion
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from threading import Thread
+from tkinter import Tk, Frame, StringVar, Label,Button,Entry
 
-def main():
-    # Carga variables de entorno
-    load_dotenv()
+isReceiving= False 
+isRun = True 
+datos = 0.0
+muestraD = 100
+data = collections.deque([0]*muestraD, maxlen=muestraD)
+xmin = 0
+xmax = muestraD
+ymin = -5
+ymax = 5 
+#"/dev/ttyUSBB"
+try:
+    arduino = serial.Serial("COM6", 9600 , timeout=1)          
+except:
+    print("Error de coneccion con el puerto")
 
-    print("Iniciando el sistema...")
-
-    try:
-        # Iniciar servicios
-        print("Iniciando servicio de detección...")
-        model_YOLO()
-
-        #print("Iniciando servicio de pesaje...")
-        #run_weight_service()
-    except Exception as e:
-        print(f"Error al iniciar el sistema: {e}")
-
-if __name__ == "__main__":
-    main()
-
-import cv2
-import time
-from database import create_tables, insert_medicion, insert_evento, get_animal_id
-from vision import detect_cuy
-from scale import Scale
-
-def main():
-    # Configuración inicial
-    create_tables()
-    scale = Scale()
-    scale.tare()
+def Iniciar():
+    global datos
+    global isReceiving
+    global isRun
+    isReceiving = True
+    isRun = True   
+    thread.start() 
+    anim = animacion.FuncAnimation(fig, plotData,  fargs=(muestraD,lines),interval = 100, blit = False )
+    plt.show()
     
-    cap = cv2.VideoCapture(0)
-    last_detection = time.time()
-    cooldown = 30  # segundos entre mediciones
-    
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            print("Error en la cámara")
-            break
+def DatosA():
+    time.sleep(1)
+    arduino.reset_input_buffer()
+    while (isRun):
+        global isReceive
+        global datos 
+        datos = float(arduino.readline().decode('utf-8'))
+        isReceive = True
         
-        class_name, confidence, imagen_base64 = detect_cuy(frame)
-        
-        if class_name and (time.time() - last_detection) > cooldown:
-            animal_id = get_animal_id(class_name)
-            
-            if animal_id:
-                # Tomar medición del peso
-                weight = None
-                attempts = 0
-                
-                while attempts < 5 and not weight:
-                    weight = scale.get_weight()
-                    attempts += 1
-                    time.sleep(0.5)
-                
-                if weight:
-                    if insert_medicion(animal_id, weight, imagen_base64):
-                        insert_evento(animal_id, 'pesaje_exitoso', 
-                                    f"Peso registrado: {weight} kg")
-                        print(f"Medición exitosa para {class_name}: {weight} kg")
-                    else:
-                        insert_evento(animal_id, 'error_peso', 
-                                    "Error al guardar medición")
-                else:
-                    insert_evento(animal_id, 'error_peso', 
-                                "No se pudo obtener el peso")
-                    print("Error al obtener el peso")
-                
-                last_detection = time.time()
-        
-        # Mostrar vista previa
-        cv2.imshow('Monitoreo Cuyes', frame)
-        
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-    
-    cap.release()
-    cv2.destroyAllWindows()
+def plotData(self,muestraD,lines):
+    data.append(datos)
+    lines.set_data(range(muestraD), data)
+    labelx.set("VOL:" + str(datos)) 
+thread = Thread(target = DatosA) 
 
-if __name__ == "__main__":
-    main()
+def Salir():
+    global isRun
+    isRun = False 
+    thread.join()
+    arduino.close()
+    time.sleep(1)
+    raiz.destroy()
+    raiz.quit()
+    print("proceso finalizado")
+def Terminar():  
+    global isRun
+    global isReceiving 
+    isRun = False 
+    isReceiving = False
+    time.sleep(0.5)
+    thread.join(timeout=0.3)
+    arduino.close()
+    datos=00.0
+    
+# , figsize=(6, 5)   tamaño / , dpi=75  zoom / plt.cla()  borra  nombres x e y /
+fig = plt.figure(facecolor="0.55",figsize=(6, 4), clear=True, dpi=100)
+ax = plt.axes(xlim=(xmin,xmax),ylim=(ymin,ymax))
+plt.title("Grafica - 0 - 5 Voltios",color='red',size=16, family="Tahoma")
+ax.set_xlabel("Muestras")
+ax.set_ylabel("Señal")
+lines = ax.plot([] ,[], 'r')[0]
+
+def Limpiar():
+    fig.clf()
+    
+raiz = Tk()
+raiz.protocol("WM_DELATE_WINDOW",Salir)
+raiz.config(bg = "black")
+raiz.title("  \t\t\t\t GRAFICA SEÑAL ANALOGICA")
+raiz.geometry("738x402")
+raiz.resizable(1,1)
+
+lienzo = FigureCanvasTkAgg(fig, master = raiz )
+lienzo._tkcanvas.grid(row = 0,column = 0, padx = 1,pady = 1)
+frame = Frame(raiz, width = 130,height = 402, bg = "#7003FC")
+frame.grid(row = 0,column = 1, padx = 1,pady = 2)
+frame.grid_propagate(False)
+frame.config(relief = "sunken")
+frame.config(cursor = "heart")
+labelx = StringVar(raiz, "VOL: 0.00")
+
+label = Label(frame,textvariable = labelx, bg= "#5CFE05",fg="black", font="Helvetica 13 bold",width=11 ,justify="center")
+label.grid(row=0,column=0, padx=5,ipady=8, pady=10)
+Iniciar = Button(frame,command= Iniciar, text= "Iniciar ",bg="blue",fg="white", font="Helvetica 14 bold",width=9,justify="center")
+Iniciar.grid(row=1,column=0, padx=5,pady=5)
+terminar = Button(frame,command= Terminar, text= "Terminar",bg="blue",fg="white", font="Helvetica 14 bold",width=9)
+terminar.grid(row=2,column=0, padx=5,pady=5)
+limpiar = Button(frame,command= Limpiar, text= "Limpiar ",bg="blue",fg="white", font="Helvetica 14 bold",width=9,justify="center")
+limpiar.grid(row=3,column=0, padx=5,pady=5)
+salir = Button(frame,command= Salir, width=9 ,text= "SALIR",bg="red", font="Helvetica 14 bold",justify="center")
+salir.grid(row=4,column=0, padx=5,pady=125)
+raiz.mainloop(
