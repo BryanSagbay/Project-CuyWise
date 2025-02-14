@@ -1,7 +1,4 @@
 
-xmax = muestraD
-ymin = -5
-ymax = 5 
 #"/dev/ttyUSBB"
 try:
     arduino = serial.Serial("COM6", 9600 , timeout=1)          
