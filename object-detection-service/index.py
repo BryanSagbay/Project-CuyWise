@@ -1,6 +1,4 @@
-import serial,time,collections
-import matplotlib.pyplot as plt
-import matplotlib.animation as animacion
+
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from threading import Thread
 from tkinter import Tk, Frame, StringVar, Label,Button,Entry
