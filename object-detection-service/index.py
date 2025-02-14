@@ -1,9 +1,4 @@
 
-
-
-muestraD = 100
-data = collections.deque([0]*muestraD, maxlen=muestraD)
-xmin = 0
 xmax = muestraD
 ymin = -5
 ymax = 5 
