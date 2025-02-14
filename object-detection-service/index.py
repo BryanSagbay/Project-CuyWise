@@ -1,8 +1,6 @@
 
 
-isReceiving= False 
-isRun = True 
-datos = 0.0
+
 muestraD = 100
 data = collections.deque([0]*muestraD, maxlen=muestraD)
 xmin = 0
