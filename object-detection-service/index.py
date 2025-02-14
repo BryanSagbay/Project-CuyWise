@@ -1,9 +1,4 @@
 
-#"/dev/ttyUSBB"
-try:
-    arduino = serial.Serial("COM6", 9600 , timeout=1)          
-except:
-    print("Error de coneccion con el puerto")
 
 def Iniciar():
     global datos
