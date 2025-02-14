@@ -1,7 +1,4 @@
 
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from threading import Thread
-from tkinter import Tk, Frame, StringVar, Label,Button,Entry
 
 isReceiving= False 
 isRun = True 
