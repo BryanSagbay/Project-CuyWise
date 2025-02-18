@@ -1,4 +1,4 @@
-bc15# Documentación del Proyecto CuyWise
+c15# Documentación del Proyecto CuyWise
 
 ## Tabla de Contenidos
 1. [Descripción General](#descripción-general)
