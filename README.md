@@ -1,4 +1,4 @@
-34# Documentación del Proyecto CuyWise
+4# Documentación del Proyecto CuyWise
 
 ## Tabla de Contenidos
 1. [Descripción General](#descripción-general)
