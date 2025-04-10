@@ -33,31 +33,34 @@ class VideoStream:
         self.cap.release()
         cv2.destroyAllWindows() 
 
-# Conexión a la base de datos
 conn = psycopg.connect(
     host="localhost", 
     port="5432", 
     dbname="cuywise", 
     user="postgres", 
     password="100"
-)
+    )
 cursor = conn.cursor()
 
 cursor.execute('SELECT "id", "nombre" FROM "Animales"')
 animales_dict = {nombre.lower(): id for id, nombre in cursor.fetchall()}
 
-model = YOLO('model_clasification.pt')
+model = YOLO('detection.pt')
 
 vs = VideoStream()
 time.sleep(2)  
 
+frame_count = 0
 ventana_abierta = False 
-ultima_detencion = {} 
 
 while True:
     ret, frame = vs.read()
     if not ret:
         break
+
+    frame_count += 1
+    if frame_count % 5 != 0:  
+        continue
 
     results = model.predict(frame, show=False)
     
@@ -69,39 +72,34 @@ while True:
 
             if class_name in animales_dict:
                 animal_id = animales_dict[class_name]
-                
-                tiempo_actual = time.time()
-                tiempo_ultima = ultima_detencion.get(animal_id, 0)
+                _, buffer = cv2.imencode('.jpg', frame)
+                img_base64 = base64.b64encode(buffer).decode('utf-8')
 
-                if tiempo_actual - tiempo_ultima > 2: 
-                    ultima_detencion[animal_id] = tiempo_actual  
+                try:
 
-                    _, buffer = cv2.imencode('.jpg', frame)
-                    img_base64 = base64.b64encode(buffer).decode('utf-8')
+                    cursor.execute("""
+                        INSERT INTO "Mediciones" (animal_id, detection, peso, imagen_base64, frame, time_ms)
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                    """, (animal_id, class_name, 10, img_base64, frame_count, result.speed['inference']))
+                    conn.commit()
 
-                    try:
-                        cursor.execute("""
-                            INSERT INTO "Mediciones" (animal_id, detection, peso, imagen_base64, frame, time_ms)
-                            VALUES (%s, %s, %s, %s, %s, %s)
-                        """, (animal_id, class_name, 10, img_base64, 0, result.speed['inference']))
-                        conn.commit()
+                    cursor.execute("""
+                        INSERT INTO "Eventos" (animal_id, tipo_evento, descripcion)
+                        VALUES (%s, %s, %s)
+                    """, (animal_id, "Detección registrada", f"Se registró una detección del animal {class_name} en el frame {frame_count}"))
+                    conn.commit()
 
-                        cursor.execute("""
-                            INSERT INTO "Eventos" (animal_id, tipo_evento, descripcion)
-                            VALUES (%s, %s, %s)
-                        """, (animal_id, "Detección registrada", f"Se detectó un {class_name}"))
-                        conn.commit()
+                    print(f"Frame {frame_count}: {class_name} detectado - Guardado en la BD - Tiempo: {result.speed['inference']:.1f}ms")
 
-                        print(f"{class_name} detectado - Imagen guardada")
+                except Exception as e:
 
-                    except Exception as e:
-                        cursor.execute("""
-                            INSERT INTO "Eventos" (animal_id, tipo_evento, descripcion)
-                            VALUES (%s, %s, %s)
-                        """, (animal_id, "Error", f"Error al guardar detección de {class_name}: {str(e)}"))
-                        conn.commit()
+                    cursor.execute("""
+                        INSERT INTO "Eventos" (animal_id, tipo_evento, descripcion)
+                        VALUES (%s, %s, %s)
+                    """, (animal_id, "Error", f"Error al guardar detección de {class_name}: {str(e)}"))
+                    conn.commit()
 
-                        print(f"Error al guardar detección de {class_name}: {e}")
+                    print(f"Error al guardar detección de {class_name}: {e}")             
 
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)

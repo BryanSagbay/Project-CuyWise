@@ -84,7 +84,7 @@ cursor = conn.cursor()
 cursor.execute('SELECT "id", "nombre" FROM "Animales"')
 animales_dict = {nombre.lower(): id for id, nombre in cursor.fetchall()}
 
-model = YOLO('model_clasification.pt')
+model = YOLO('detection.pt')
 
 vs = VideoStream()
 time.sleep(2)  
