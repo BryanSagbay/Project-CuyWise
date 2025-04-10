@@ -17,10 +17,9 @@ export class HomeComponent {
 
 
   // Definir las rutas posibles como un tipo literal
-  private breadcrumbMap: { [key in 'home' | 'imagenes' | 'monitoreo' | 'animales' | 'mediciones' | 'logs' | 'diagramas']: string } = {
+  private breadcrumbMap: { [key in 'home' | 'imagenes' | 'animales' | 'mediciones' | 'logs' | 'diagramas']: string } = {
     'home': 'Inicio',
     'imagenes': 'Imágenes',
-    'monitoreo': 'Monitoreo',
     'animales': 'Animales',
     'mediciones': 'Mediciones',
     'logs': 'Logs',
