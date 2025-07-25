@@ -75,6 +75,7 @@ El proyecto **CuyWise** tiene como objetivo la detección, monitoreo y gestión 
 		```bash
 	     python3 index.py
 	   ```
+  
 ### Autores
 
 Este proyecto fue realizado para fines investigativos bajo el nombre del Proyecto CuyWise.
