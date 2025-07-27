@@ -1,12 +1,83 @@
-import psycopg
+from ultralytics import YOLO
 import cv2
 import time
-import base64
-import numpy as np
-import threading
+import random
 import serial
-from ultralytics import YOLO
+from threading import Thread
+from collections import deque
+import psycopg2
+import base64
+from datetime import datetime
 
+# -------- CONFIG DB (Neon) --------
+DB_CONFIG = {
+    'dbname': '',
+    'user': '',
+    'password': '',
+    'host': '',
+    'port': '',
+    'sslmode': ''
+}
+
+# Mapeo clases YOLO -> IDs en tabla animales
+MAPEO_ANIMALES = {
+    'cuy1': 1,
+    'cuy2': 2
+}
+
+# -------- CONEXIÓN A BD --------
+def obtener_conexion():
+    return psycopg2.connect(**DB_CONFIG)
+
+# -------- GUARDAR MEDICIÓN --------
+def guardar_medicion(peso, frame, animal_nombre):
+    # Validar peso antes de guardar
+    if peso <= 0 or peso > 5000:
+        print(f"⚠️ Peso fuera de rango, no se guarda: {peso:.2f} g")
+        return
+
+    # Convertir frame a base64
+    _, buffer = cv2.imencode('.jpg', frame)
+    imagen_base64 = base64.b64encode(buffer).decode('utf-8')
+
+    animal_id = MAPEO_ANIMALES.get(animal_nombre)
+    if not animal_id:
+        print(f"⚠️ Animal {animal_nombre} no encontrado en mapeo.")
+        return
+
+    try:
+        with obtener_conexion() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO "medicion" ("peso", "imagen_base64", "fecha_medicion", "animal_id")
+                    VALUES (%s, %s, %s, %s)
+                """, (peso, imagen_base64, datetime.now().date(), animal_id))
+            conn.commit()
+        print(f"💾 Medición guardada en DB para {animal_nombre} ({peso:.2f} g)")
+    except Exception as e:
+        guardar_evento_error(f"Error guardando medición: {e}", animal_nombre)
+
+# -------- GUARDAR SOLO ERRORES EN EVENTO --------
+def guardar_evento_error(descripcion, animal_nombre=None):
+    animal_id = MAPEO_ANIMALES.get(animal_nombre) if animal_nombre else None
+    try:
+        with obtener_conexion() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO "evento" ("tipo_evento", "descripcion", "fecha_evento", "animal_id")
+                    VALUES ('ERROR', %s, %s, %s)
+                """, (descripcion, datetime.now().date(), animal_id))
+            conn.commit()
+        print(f"📑 Error registrado en DB: {descripcion}")
+    except Exception as e:
+        print(f"❌ Error guardando evento en DB: {e}")
+
+# -------- CONFIG YOLO --------
+CONF_THRESHOLD = 0.7
+model = YOLO("cuywise_v2.pt")
+colors = {class_id: [random.randint(0, 255) for _ in range(3)] for class_id in model.names.keys()}
+
+# -------- ARDUINO SERIAL --------
 def detectar_puerto():
     posibles_puertos = ["/dev/ttyUSB0", "/dev/ttyUSB1", "/dev/ttyTHS1"]
     for puerto in posibles_puertos:
@@ -20,142 +91,140 @@ def detectar_puerto():
     return None
 
 arduino = detectar_puerto()
-peso_actual = 0.0 
+if arduino is None:
+    exit()
 
-def leer_peso():
+# -------- VARIABLES --------
+isRun = True
+peso_actual = None
+ultimo_envio = 0
+COOLDOWN = 5
+MIN_PESO = 110
+lecturas_peso = deque(maxlen=5)
+mostrar_estado_puerta = False
+tiempo_mostrar_estado = 0
+
+# -------- HILO LECTURA PESO --------
+def leer_datos():
     global peso_actual
-    if not arduino:
-        return
-
     time.sleep(1)
     arduino.reset_input_buffer()
-    
-    while True:
+
+    while isRun:
         try:
             line = arduino.readline().decode('utf-8').strip()
             if line:
-                peso_actual = float(line) - 1 
-                print(f"📡 Peso actualizado: {peso_actual} kg")
-            time.sleep(1)  
-        except ValueError:
-            print(f"⚠️ Dato inválido recibido: {line}")
+                try:
+                    valor = float(line) - 1
+                    lecturas_peso.append(valor)
+                    if len(lecturas_peso) == lecturas_peso.maxlen:
+                        promedio = sum(lecturas_peso) / len(lecturas_peso)
+                        peso_actual = promedio
+                        print(f"📡 Peso estabilizado: {peso_actual:.2f} g")
+                except ValueError:
+                    print(f"⚠️ Mensaje del Arduino: {line}")
         except Exception as e:
-            print(f"❌ Error de lectura: {e}")
+            guardar_evento_error(f"Error lectura serial: {e}")
 
-thread_peso = threading.Thread(target=leer_peso, daemon=True)
-thread_peso.start()
+thread = Thread(target=leer_datos, daemon=True)
+thread.start()
 
-class VideoStream:
-    def __init__(self, source=0):
-        self.cap = cv2.VideoCapture(source)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-        self.cap.set(cv2.CAP_PROP_FPS, 30)
-        self.ret, self.frame = self.cap.read()
-        self.stopped = False
-        self.lock = threading.Lock() 
-        threading.Thread(target=self.update, args=()).start()
+# -------- LOOP PRINCIPAL --------
+cap = cv2.VideoCapture(2)
+last_print_time = time.time()
 
-    def update(self):
-        while not self.stopped:
-            ret, frame = self.cap.read()
-            if ret:
-                with self.lock:
-                    self.ret, self.frame = ret, frame  
+try:
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
 
-    def read(self):
-        with self.lock:
-            return self.ret, self.frame  
+        # Detección YOLO
+        results = model(frame, verbose=False)
+        detecciones_validas = []
+        for box in results[0].boxes:
+            conf = float(box.conf[0])
+            if conf >= CONF_THRESHOLD:
+                detecciones_validas.append(box)
 
-    def stop(self):
-        self.stopped = True
-        self.cap.release()
-        cv2.destroyAllWindows() 
-
-conn = psycopg.connect(
-    host="localhost", 
-    port="5432", 
-    dbname="cuywise", 
-    user="postgres", 
-    password="100"
-)
-cursor = conn.cursor()
-
-cursor.execute('SELECT "id", "nombre" FROM "Animales"')
-animales_dict = {nombre.lower(): id for id, nombre in cursor.fetchall()}
-
-model = YOLO('detection.pt')
-
-vs = VideoStream()
-time.sleep(2)  
-
-ventana_abierta = False 
-ultima_detencion = {}  
-while True:
-    ret, frame = vs.read()
-    if not ret:
-        break
-
-    results = model.predict(frame, show=False)
-    
-    for result in results:
-        boxes = result.boxes
-        for box in boxes:
+        # Dibujar detecciones
+        frame_with_boxes = frame.copy()
+        for box in detecciones_validas:
+            x1, y1, x2, y2 = map(int, box.xyxy[0])
             class_id = int(box.cls[0])
-            class_name = model.names[class_id].lower()
+            class_name = model.names[class_id]
+            conf = float(box.conf[0])
+            color = colors[class_id]
 
-            if class_name in animales_dict:
-                animal_id = animales_dict[class_name]
-                
-                tiempo_actual = time.time()
-                tiempo_ultima = ultima_detencion.get(animal_id, 0)
+            cv2.rectangle(frame_with_boxes, (x1, y1), (x2, y2), color, 2)
+            cv2.putText(frame_with_boxes, f"{class_name} {conf:.2f}",
+                        (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
 
-                if tiempo_actual - tiempo_ultima > 2:  
-                    ultima_detencion[animal_id] = tiempo_actual
+        # Control envío con peso
+        if detecciones_validas and peso_actual is not None:
+            ahora = time.time()
+            class_id = int(detecciones_validas[0].cls[0])
+            class_name = model.names[class_id]
 
-                    _, buffer = cv2.imencode('.jpg', frame)
-                    img_base64 = base64.b64encode(buffer).decode('utf-8')
+            if peso_actual >= MIN_PESO:
+                if ahora - ultimo_envio >= COOLDOWN:
+                    # Enviar 1 al Arduino
+                    arduino.write(b'1')
+                    print(f"➡️ Enviado '1': Abrir puerta para {class_name} con {peso_actual:.2f} g")
 
-                    try:
-                        cursor.execute("""
-                            INSERT INTO "Mediciones" (animal_id, detection, peso, imagen_base64, frame, time_ms)
-                            VALUES (%s, %s, %s, %s, %s, %s)
-                        """, (animal_id, class_name, peso_actual, img_base64, 0, result.speed['inference']))
-                        conn.commit()
+                    # Guardar medición en DB
+                    guardar_medicion(peso_actual, frame_with_boxes, class_name)
 
-                        cursor.execute("""
-                            INSERT INTO "Eventos" (animal_id, tipo_evento, descripcion)
-                            VALUES (%s, %s, %s)
-                        """, (animal_id, "Detección registrada", f"Se detectó un {class_name} con peso de {peso_actual:.2f} kg"))
-                        conn.commit()
+                    mostrar_estado_puerta = True
+                    tiempo_mostrar_estado = ahora
 
-                        print(f"{class_name} detectado 🐹 - Peso: {peso_actual:.2f} kg - Imagen guardada")
+                    ultimo_envio = ahora
+                    peso_actual = None
+                    lecturas_peso.clear()
+            else:
+                print(f"⚠️ Peso menor al mínimo ({MIN_PESO} g): {peso_actual:.2f} g")
 
-                    except Exception as e:
-                        cursor.execute("""
-                            INSERT INTO "Eventos" (animal_id, tipo_evento, descripcion)
-                            VALUES (%s, %s, %s)
-                        """, (animal_id, "Error", f"Error al guardar detección de {class_name}: {str(e)}"))
-                        conn.commit()
+        # Mostrar peso en pantalla
+        if peso_actual is not None:
+            color_peso = (0, 255, 0) if peso_actual >= MIN_PESO else (0, 0, 255)
+            cv2.putText(frame_with_boxes, f"Peso: {peso_actual:.2f} g", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, color_peso, 2)
 
-                        print(f"Error al guardar detección de {class_name}: {e}")
+        if mostrar_estado_puerta and (time.time() - tiempo_mostrar_estado <= 1):
+            cv2.putText(frame_with_boxes, "PUERTA ABIERTA", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 0), 3)
+        elif mostrar_estado_puerta and (time.time() - tiempo_mostrar_estado > 1):
+            mostrar_estado_puerta = False
 
-                x1, y1, x2, y2 = map(int, box.xyxy[0])
-                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                cv2.putText(frame, f"{class_name} ({peso_actual:.2f} kg)", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+        cv2.imshow("YOLO Inference", frame_with_boxes)
 
-    if not ventana_abierta:
-        cv2.namedWindow("Detección de Animales", cv2.WINDOW_NORMAL) 
-        ventana_abierta = True
+        # Mensajes periódicos
+        if time.time() - last_print_time >= 2:
+            if len(detecciones_validas) > 0:
+                print(f"Detecciones (> {int(CONF_THRESHOLD*100)}% confianza):")
+                for box in detecciones_validas:
+                    class_id = int(box.cls[0])
+                    class_name = model.names[class_id]
+                    conf = float(box.conf[0])
+                    print(f"- {class_name} ({conf:.2f})")
+            else:
+                print("Sin detecciones válidas")
+            last_print_time = time.time()
 
-    cv2.imshow("Detección de Animales", frame)
+        # Teclas control
+        key = cv2.waitKey(1) & 0xFF
+        if key == 27:
+            break
+        elif key == 82:
+            CONF_THRESHOLD = min(1.0, CONF_THRESHOLD + 0.05)
+        elif key == 84:
+            CONF_THRESHOLD = max(0.0, CONF_THRESHOLD - 0.05)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+except KeyboardInterrupt:
+    pass
 
-vs.stop()
-cursor.close()
-conn.close()
-if arduino:
-    arduino.close()
-print("✅ Conexión cerrada. Programa finalizado.")
+# -------- CIERRE --------
+isRun = False
+thread.join()
+cap.release()
+arduino.close()
+cv2.destroyAllWindows()
+print("✅ Programa finalizado.")
